@@ -13,25 +13,25 @@ Game::Game(int screenWidth, int screenHeight)
 	}
 	SDL_Log("SDL_Init - success!\n");
 
-	if(!SDL_CreateWindowAndRenderer("Snake", mScreenWidth, mScreenHeight, 0, &mWindow, &mRenderer))
+	if(!SDL_CreateWindowAndRenderer("Snake", mScreenWidth, mScreenHeight, 0, &window, &renderer))
 	{
 		SDL_Log( "Window and renderer could not be created! SDL Error: %s\n", SDL_GetError() );
 		return;
 	}
 	SDL_Log("SDL_CreateWindowAndRenderer - success!\n");
 
-	SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 255); // white = 255, 255, 255, 255
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // white = 255, 255, 255, 255
 }
 Game::~Game()
 {
-	SDL_DestroyRenderer(mRenderer);
-	SDL_DestroyWindow(mWindow);
-	mWindow = NULL;
-	mRenderer = NULL;
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+	window = NULL;
+	renderer = NULL;
 
 	//Quit SDL subsystems
 	SDL_Quit();
-	SDL_Log("Game - quit\n");
+	SDL_Log("Game - quit!\n");
 }
 
 void Game::Run()
@@ -41,13 +41,12 @@ void Game::Run()
 
 	SDL_Event event;
 
-	SDL_Texture* testTexture = LoadTexture(mRenderer, "../assets/imgs/sniper.png");
+	// Load all textures
+	Textures textures(renderer);
 
 	// ---------- MAIN GAME LOOP ----------
 	while(mIsRunning)
 	{
-		// SDL_Delay(5000);
-
 		while(SDL_PollEvent(&event) != 0)
 		{
 			if( event.type == SDL_EVENT_QUIT )
@@ -57,15 +56,11 @@ void Game::Run()
 		}
 
 		//Clear screen
-		SDL_RenderClear(mRenderer);
+		SDL_RenderClear(renderer);
 
-		SDL_RenderTexture(mRenderer, testTexture, NULL, NULL);
+		SDL_RenderTexture(renderer, textures.apple, NULL, NULL);
 
 		//Update screen
-		SDL_RenderPresent(mRenderer);
+		SDL_RenderPresent(renderer);
 	}
-
-	//Free loaded image
-	SDL_DestroyTexture(testTexture);
-	testTexture = NULL;
 }

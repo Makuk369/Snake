@@ -1,6 +1,32 @@
 #include "headers/AssetHandling.hpp"
 
-SDL_Texture* LoadTexture(SDL_Renderer* renderer, std::string path)
+Textures::Textures(SDL_Renderer* renderer)
+{
+    mImgsPath = "../assets/imgs/";
+
+    snakeHead = LoadTexture(renderer, std::string(mImgsPath).append("sniper.png"));
+    snakeBody = LoadTexture(renderer, std::string(mImgsPath).append("sniper.png"));
+    snakeTail = LoadTexture(renderer, std::string(mImgsPath).append("sniper.png"));
+    apple = LoadTexture(renderer, std::string(mImgsPath).append("sniper.png"));
+
+    SDL_Log("Textures - loaded!\n");
+};
+
+Textures::~Textures()
+{
+    SDL_DestroyTexture(snakeHead);
+	snakeHead = NULL;
+	SDL_DestroyTexture(snakeBody);
+	snakeBody = NULL;
+    SDL_DestroyTexture(snakeTail);
+	snakeTail = NULL;
+    SDL_DestroyTexture(apple);
+	apple = NULL;
+
+    SDL_Log("Textures - destroyed!\n");
+};
+
+SDL_Texture* Textures::LoadTexture(SDL_Renderer* renderer, std::string path)
 {
 	//The final texture
 	SDL_Texture* newTexture = NULL;
@@ -25,4 +51,4 @@ SDL_Texture* LoadTexture(SDL_Renderer* renderer, std::string path)
 	}
 
 	return newTexture;
-}
+};

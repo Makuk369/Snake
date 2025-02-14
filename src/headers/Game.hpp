@@ -14,8 +14,8 @@ public:
     Game(int screenWidth, int screenHeight);
     ~Game();
 
-    SDL_Window* mWindow;
-    SDL_Renderer* mRenderer;
+    SDL_Window* window;
+    SDL_Renderer* renderer;
 
     void Run();
 };

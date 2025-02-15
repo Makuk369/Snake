@@ -4,10 +4,10 @@ Textures::Textures(SDL_Renderer* renderer)
 {
     mImgsPath = "../assets/imgs/";
 
-    snakeHead = LoadTexture(renderer, std::string(mImgsPath).append("sniper.png"));
-    snakeBody = LoadTexture(renderer, std::string(mImgsPath).append("sniper.png"));
-    snakeTail = LoadTexture(renderer, std::string(mImgsPath).append("sniper.png"));
-    apple = LoadTexture(renderer, std::string(mImgsPath).append("sniper.png"));
+    snakeHead = LoadTexture(renderer, std::string(mImgsPath).append("snakeHead.png"));
+    snakeBody = LoadTexture(renderer, std::string(mImgsPath).append("snakeBody.png"));
+    snakeTail = LoadTexture(renderer, std::string(mImgsPath).append("snakeTail.png"));
+    apple = LoadTexture(renderer, std::string(mImgsPath).append("apple.png"));
 
     SDL_Log("Textures - loaded!\n");
 };
@@ -45,10 +45,14 @@ SDL_Texture* Textures::LoadTexture(SDL_Renderer* renderer, std::string path)
 		{
 			SDL_Log( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
 		}
+		else
+		{
+			SDL_SetTextureScaleMode(newTexture, SDL_SCALEMODE_NEAREST);
+		}
 
 		//Get rid of old loaded surface
 		SDL_DestroySurface( loadedSurface );
 	}
-
+	
 	return newTexture;
 };

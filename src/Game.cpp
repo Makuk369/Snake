@@ -50,6 +50,10 @@ void Game::Run()
 	Timer timer;
 	timer.Start();
 
+	float snakePosX = 0;
+	float snakePosY = 0;
+	SDL_FRect snakeRect = {snakePosX, snakePosY, 80, 80};
+
 	// ---------- MAIN GAME LOOP ----------
 	while(mIsRunning)
 	{
@@ -64,17 +68,30 @@ void Game::Run()
 			}
 			else if(event.type == SDL_EVENT_KEY_DOWN)
 			{
-				if(event.key.key == SDLK_T)
+				if(event.key.key == SDLK_W)
 				{
-					SDL_Log("Time = %.3fs\n", timer.getTicks() / 1000.f);
+					snakePosY -= 80;
+				}
+				if(event.key.key == SDLK_A)
+				{
+					snakePosX -= 80;
+				}
+				if(event.key.key == SDLK_S)
+				{
+					snakePosY += 80;
+				}
+				if(event.key.key == SDLK_D)
+				{
+					snakePosX += 80;
 				}
 			}
 		}
 
 		//Clear screen
 		SDL_RenderClear(renderer);
-
-		SDL_RenderTexture(renderer, textures.apple, NULL, NULL);
+		
+		SDL_FRect snakeRect = {snakePosX, snakePosY, 80, 80};
+		SDL_RenderTexture(renderer, textures.snakeHead, NULL, &snakeRect);
 
 		//Update screen
 		SDL_RenderPresent(renderer);

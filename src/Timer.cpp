@@ -9,7 +9,7 @@ Timer::Timer()
 
     mPaused = false;
     mStarted = false;
-}
+};
 
 void Timer::Start()
 {
@@ -22,7 +22,7 @@ void Timer::Start()
     //Get the current clock time
     mStartTicks = SDL_GetTicks();
 	mPausedTicks = 0;
-}
+};
 
 void Timer::Stop()
 {
@@ -35,7 +35,7 @@ void Timer::Stop()
 	//Clear tick variables
 	mStartTicks = 0;
 	mPausedTicks = 0;
-}
+};
 
 void Timer::Pause()
 {
@@ -49,7 +49,7 @@ void Timer::Pause()
         mPausedTicks = SDL_GetTicks() - mStartTicks;
 		mStartTicks = 0;
     }
-}
+};
 
 void Timer::Unpause()
 {
@@ -65,7 +65,7 @@ void Timer::Unpause()
         //Reset the paused ticks
         mPausedTicks = 0;
     }
-}
+};
 
 Uint64 Timer::getTicks()
 {
@@ -89,7 +89,7 @@ Uint64 Timer::getTicks()
     }
 
     return time;
-}
+};
 
 float Timer::getDeltaTime()
 {
@@ -97,16 +97,16 @@ float Timer::getDeltaTime()
     float deltaTime = (currentFrameTicks - mLastFrameTicks) / 1000000000.f; // 1 sec = 1000000000 nanosec
     mLastFrameTicks = currentFrameTicks;
     return deltaTime;
-}
+};
 
 bool Timer::isStarted()
 {
 	//Timer is running and paused or unpaused
     return mStarted;
-}
+};
 
 bool Timer::isPaused()
 {
 	//Timer is running and paused
     return mPaused && mStarted;
-}
+};

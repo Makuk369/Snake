@@ -1,6 +1,8 @@
 #include "headers/Game.hpp"
 #include "headers/AssetHandling.hpp"
 #include "headers/Timer.hpp"
+#include "headers/Vector2.hpp"
+#include "headers/Snake.hpp"
 
 Game::Game(int screenWidth, int screenHeight)
 {
@@ -27,6 +29,8 @@ Game::Game(int screenWidth, int screenHeight)
 }
 Game::~Game()
 {
+	// DestroyTextures(textures);
+
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	window = NULL;
@@ -37,6 +41,12 @@ Game::~Game()
 	SDL_Log("Game - quit!\n");
 }
 
+// void Snake::Render(SDL_Renderer* renderer)
+// {
+//     SDL_FRect snakeRect = {mPosX, mPosY, 80, 80};
+//     SDL_RenderTexture(renderer, textures[SNAKE_HEAD], NULL, &snakeRect);
+// };
+
 void Game::Run()
 {
 	SDL_Log("Game - running!\n");
@@ -44,15 +54,12 @@ void Game::Run()
 
 	SDL_Event event;
 
-	// Load all textures, automaticly destroys them later
-	Textures textures(renderer);
+	// textures[SNAKE_HEAD] = LoadTexture(renderer, PATH_TO_IMGS, "snakeHead.png");
 
 	Timer timer;
 	timer.Start();
 
-	float snakePosX = 0;
-	float snakePosY = 0;
-	SDL_FRect snakeRect = {snakePosX, snakePosY, 80, 80};
+	Snake snake(renderer, 0, 0);
 
 	// ---------- MAIN GAME LOOP ----------
 	while(mIsRunning)
@@ -68,30 +75,35 @@ void Game::Run()
 			}
 			else if(event.type == SDL_EVENT_KEY_DOWN)
 			{
-				if(event.key.key == SDLK_W)
+				// if(event.key.key == SDLK_W)
+				// {
+				// 	snakePosY -= 80;
+				// }
+				// if(event.key.key == SDLK_A)
+				// {
+				// 	snakePosX -= 80;
+				// }
+				// if(event.key.key == SDLK_S)
+				// {
+				// 	snakePosY += 80;
+				// }
+				// if(event.key.key == SDLK_D)
+				// {
+				// 	snakePosX += 80;
+				// }
+				if(event.key.key == SDLK_SPACE)
 				{
-					snakePosY -= 80;
-				}
-				if(event.key.key == SDLK_A)
-				{
-					snakePosX -= 80;
-				}
-				if(event.key.key == SDLK_S)
-				{
-					snakePosY += 80;
-				}
-				if(event.key.key == SDLK_D)
-				{
-					snakePosX += 80;
+					snake.Move({1, 0});
 				}
 			}
 		}
 
 		//Clear screen
 		SDL_RenderClear(renderer);
-		
-		SDL_FRect snakeRect = {snakePosX, snakePosY, 80, 80};
-		SDL_RenderTexture(renderer, textures.snakeHead, NULL, &snakeRect);
+
+		snake.Render(renderer);
+		// SDL_FRect snakeRect = {0, 0, 80, 80};
+		// SDL_RenderTexture(renderer, textures[SNAKE_HEAD], NULL, &snakeRect);
 
 		//Update screen
 		SDL_RenderPresent(renderer);

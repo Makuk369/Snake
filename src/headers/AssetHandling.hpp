@@ -2,20 +2,18 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <string>
+#include <unordered_map>
 
-class Textures
-{
-    public:
-        Textures(SDL_Renderer* renderer);
-        ~Textures();
-        
-        SDL_Texture* snakeHead;
-        SDL_Texture* snakeBody;
-        SDL_Texture* snakeTail;
-        SDL_Texture* apple;
+#define PATH_TO_IMGS std::string("../assets/imgs/")
 
-    private:
-        std::string mImgsPath;
-    
-        SDL_Texture* LoadTexture(SDL_Renderer* renderer, std::string path);
-};
+// enum TextureID
+// {
+//     SNAKE_HEAD,
+// };
+
+// static std::unordered_map<TextureID, SDL_Texture*> textures;
+
+SDL_Texture* LoadTexture(SDL_Renderer* renderer, std::string path);
+SDL_Texture* LoadTexture(SDL_Renderer* renderer, std::string pathBase, std::string pathEnd);
+
+// void DestroyTextures(std::unordered_map<TextureID, SDL_Texture*>& textures);

@@ -4,18 +4,18 @@
 
 class Game
 {
-private:
-    int mScreenWidth;
-    int mScreenHeight;
+    public:
+        Game(int screenWidth, int screenHeight);
+        ~Game();
+        
+        SDL_Window* window;
+        SDL_Renderer* renderer;
+        
+        void Run();
     
-    bool mIsRunning;
-
-public:
-    Game(int screenWidth, int screenHeight);
-    ~Game();
-
-    SDL_Window* window;
-    SDL_Renderer* renderer;
-
-    void Run();
+    private:
+        int mScreenWidth;
+        int mScreenHeight;
+        
+        bool mIsRunning;
 };

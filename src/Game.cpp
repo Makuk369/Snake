@@ -1,5 +1,6 @@
 #include "headers/Game.hpp"
 #include "headers/AssetHandling.hpp"
+#include "headers/Timer.hpp"
 
 Game::Game(int screenWidth, int screenHeight)
 {
@@ -18,6 +19,8 @@ Game::Game(int screenWidth, int screenHeight)
 		SDL_Log( "Window and renderer could not be created! SDL Error: %s\n", SDL_GetError() );
 		return;
 	}
+	//Enable vsync
+	SDL_SetRenderVSync(renderer, 1);
 	SDL_Log("SDL_CreateWindowAndRenderer - success!\n");
 
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // white = 255, 255, 255, 255
@@ -41,17 +44,30 @@ void Game::Run()
 
 	SDL_Event event;
 
-	// Load all textures
+	// Load all textures, automaticly destroys them later
 	Textures textures(renderer);
+
+	Timer timer;
+	timer.Start();
 
 	// ---------- MAIN GAME LOOP ----------
 	while(mIsRunning)
 	{
+		float deltaTime = timer.getDeltaTime();
+		// SDL_Log("Delta time = %f\n", deltaTime);
+
 		while(SDL_PollEvent(&event) != 0)
 		{
-			if( event.type == SDL_EVENT_QUIT )
+			if(event.type == SDL_EVENT_QUIT)
 			{
 				mIsRunning = false;
+			}
+			else if(event.type == SDL_EVENT_KEY_DOWN)
+			{
+				if(event.key.key == SDLK_T)
+				{
+					SDL_Log("Time = %.3fs\n", timer.getTicks() / 1000.f);
+				}
 			}
 		}
 

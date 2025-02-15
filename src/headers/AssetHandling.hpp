@@ -5,17 +5,17 @@
 
 class Textures
 {
-private:
-    std::string mImgsPath;
+    public:
+        Textures(SDL_Renderer* renderer);
+        ~Textures();
+        
+        SDL_Texture* snakeHead;
+        SDL_Texture* snakeBody;
+        SDL_Texture* snakeTail;
+        SDL_Texture* apple;
 
-    SDL_Texture* LoadTexture(SDL_Renderer* renderer, std::string path);
+    private:
+        std::string mImgsPath;
     
-public:
-    Textures(SDL_Renderer* renderer);
-    ~Textures();
-
-    SDL_Texture* snakeHead;
-    SDL_Texture* snakeBody;
-    SDL_Texture* snakeTail;
-    SDL_Texture* apple;
+        SDL_Texture* LoadTexture(SDL_Renderer* renderer, std::string path);
 };

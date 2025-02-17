@@ -41,12 +41,6 @@ Game::~Game()
 	SDL_Log("Game - quit!\n");
 }
 
-// void Snake::Render(SDL_Renderer* renderer)
-// {
-//     SDL_FRect snakeRect = {mPosX, mPosY, 80, 80};
-//     SDL_RenderTexture(renderer, textures[SNAKE_HEAD], NULL, &snakeRect);
-// };
-
 void Game::Run()
 {
 	SDL_Log("Game - running!\n");
@@ -54,18 +48,20 @@ void Game::Run()
 
 	SDL_Event event;
 
-	// textures[SNAKE_HEAD] = LoadTexture(renderer, PATH_TO_IMGS, "snakeHead.png");
-
 	Timer timer;
 	timer.Start();
-
+	float deltaTime = 0;
+	
 	Snake snake(renderer, 0, 0);
+	vector2 snakeMoveDir = {0, 0};
+	float moveDelay = 0;
 
 	// ---------- MAIN GAME LOOP ----------
 	while(mIsRunning)
 	{
-		float deltaTime = timer.getDeltaTime();
+		deltaTime = timer.getDeltaTime();
 		// SDL_Log("Delta time = %f\n", deltaTime);
+		moveDelay += deltaTime;
 
 		while(SDL_PollEvent(&event) != 0)
 		{
@@ -75,35 +71,36 @@ void Game::Run()
 			}
 			else if(event.type == SDL_EVENT_KEY_DOWN)
 			{
-				// if(event.key.key == SDLK_W)
-				// {
-				// 	snakePosY -= 80;
-				// }
-				// if(event.key.key == SDLK_A)
-				// {
-				// 	snakePosX -= 80;
-				// }
-				// if(event.key.key == SDLK_S)
-				// {
-				// 	snakePosY += 80;
-				// }
-				// if(event.key.key == SDLK_D)
-				// {
-				// 	snakePosX += 80;
-				// }
-				if(event.key.key == SDLK_SPACE)
+				if(event.key.key == SDLK_W)
 				{
-					snake.Move({1, 0});
+					snakeMoveDir = {0, -1};
+				}
+				if(event.key.key == SDLK_A)
+				{
+					snakeMoveDir = {-1, 0};
+				}
+				if(event.key.key == SDLK_S)
+				{
+					snakeMoveDir = {0, 1};
+				}
+				if(event.key.key == SDLK_D)
+				{
+					snakeMoveDir = {1, 0};
 				}
 			}
 		}
 
+		if(moveDelay >= 1)
+		{
+			snake.Move(snakeMoveDir);
+			moveDelay = 0;
+		}
+
+		// ---------- RENDERING ----------
 		//Clear screen
 		SDL_RenderClear(renderer);
 
 		snake.Render(renderer);
-		// SDL_FRect snakeRect = {0, 0, 80, 80};
-		// SDL_RenderTexture(renderer, textures[SNAKE_HEAD], NULL, &snakeRect);
 
 		//Update screen
 		SDL_RenderPresent(renderer);

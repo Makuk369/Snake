@@ -65,11 +65,11 @@ SDL_Texture* LoadTexture(SDL_Renderer* renderer, std::string pathBase, std::stri
 	return newTexture;
 };
 
-// void DestroyTextures(std::unordered_map<TextureID, SDL_Texture*>& textures)
+// void DestroyTextures(std::array<SDL_Texture*, TEXTURES_COUNT>& textures)
 // {
-// 	for (const auto& [key, value] : textures)
+// 	for (SDL_Texture* texture : textures)
 // 	{
-// 		SDL_DestroyTexture(textures.at(key));
+// 		SDL_DestroyTexture(texture);
 // 	}
 // 	SDL_Log("Textures - destroyed!\n");
 // };

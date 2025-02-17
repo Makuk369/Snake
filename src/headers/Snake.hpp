@@ -8,6 +8,7 @@ class Snake
 {
     public:
         Snake(SDL_Renderer* renderer, float posX, float posY);
+        ~Snake();
 
         void Move(vector2 dir);
 

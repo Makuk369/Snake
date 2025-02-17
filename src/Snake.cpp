@@ -11,6 +11,12 @@ Snake::Snake(SDL_Renderer* renderer, float posX, float posY)
     SDL_Log("Snake - init!\n");
 };
 
+Snake::~Snake()
+{
+    SDL_DestroyTexture(mHead);
+    SDL_Log("Snake - destroy!\n");
+}
+
 void Snake::Move(vector2 dir)
 {
     mPosX += dir.x * 80;
@@ -20,6 +26,5 @@ void Snake::Move(vector2 dir)
 void Snake::Render(SDL_Renderer* renderer)
 {
     SDL_FRect snakeRect = {mPosX, mPosY, 80, 80};
-    // SDL_RenderTexture(renderer, textures[SNAKE_HEAD], NULL, &snakeRect);
     SDL_RenderTexture(renderer, mHead, NULL, &snakeRect);
 };

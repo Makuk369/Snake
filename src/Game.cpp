@@ -1,13 +1,9 @@
 #include "headers/Game.hpp"
-#include "headers/AssetHandling.hpp"
-#include "headers/Timer.hpp"
-#include "headers/Vector2.hpp"
-#include "headers/Snake.hpp"
 
-Game::Game(int screenWidth, int screenHeight)
+Game::Game()
 {
-	mScreenWidth = screenWidth;
-	mScreenHeight = screenHeight;
+	mScreenWidth = GRID_WIDTH * GRID_SCALE;
+	mScreenHeight = GRID_HEIGHT * GRID_SCALE;
 
 	if(!SDL_Init(SDL_INIT_VIDEO))
 	{
@@ -52,7 +48,7 @@ void Game::Run()
 	timer.Start();
 	float deltaTime = 0;
 	
-	Snake snake(renderer, 0, 0);
+	Snake snake(renderer, 2, 2);
 	vector2 snakeMoveDir = {0, 0};
 	float moveDelay = 0;
 
@@ -90,10 +86,14 @@ void Game::Run()
 			}
 		}
 
-		if(moveDelay >= 1)
+		if(moveDelay >= 0.5)
 		{
 			snake.Move(snakeMoveDir);
 			moveDelay = 0;
+		}
+		if(snake.CheckCollision())
+		{
+			mIsRunning = false;
 		}
 
 		// ---------- RENDERING ----------

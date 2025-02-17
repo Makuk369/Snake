@@ -1,5 +1,4 @@
 #include "headers/AssetHandling.hpp"
-#include "AssetHandling.hpp"
 
 SDL_Texture* LoadTexture(SDL_Renderer* renderer, std::string path)
 {

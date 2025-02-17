@@ -5,6 +5,7 @@ Snake::Snake(SDL_Renderer* renderer, float posX, float posY)
     mPosX = posX * GRID_SCALE;
     mPosY = posY * GRID_SCALE;
     mLength = 3;
+    mRotation = 0;
 
     mHead = LoadTexture(renderer, PATH_TO_IMGS, "snakeHead.png");
 
@@ -21,13 +22,18 @@ void Snake::Move(vector2 dir)
 {
     mPosX += dir.x * GRID_SCALE;
     mPosY += dir.y * GRID_SCALE;
+
+    if(dir.x == 1){ mRotation = 90; }
+    if(dir.x == -1){ mRotation = -90; }
+    if(dir.y == 1){ mRotation = 180; }
+    if(dir.y == -1){ mRotation = 0; }
 }
 
 void Snake::Render(SDL_Renderer* renderer)
 {
     SDL_FRect snakeRect = {mPosX, mPosY, 80, 80};
     // SDL_Log("Snake x,y = %.0f,%.0f\n", mPosX, mPosY);
-    SDL_RenderTexture(renderer, mHead, NULL, &snakeRect);
+    SDL_RenderTextureRotated(renderer, mHead, NULL, &snakeRect, mRotation, NULL, SDL_FLIP_NONE);
 }
 
 bool Snake::CheckCollision()

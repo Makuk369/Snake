@@ -19,6 +19,7 @@ class Snake
         float mPosX;
         float mPosY;
         int mLength;
+        int mRotation;
 
         SDL_Texture* mHead;
 };

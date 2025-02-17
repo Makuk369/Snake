@@ -4,7 +4,7 @@
 #include "GameSettings.hpp"
 #include "AssetHandling.hpp"
 #include "Timer.hpp"
-#include "Vector2.hpp"
+#include "Structures.hpp"
 #include "Snake.hpp"
 
 class Game

@@ -1,8 +1,9 @@
 #pragma once
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
+#include <vector>
 #include "GameSettings.hpp"
-#include "Vector2.hpp"
+#include "Structures.hpp"
 #include "AssetHandling.hpp"
 
 class Snake
@@ -11,15 +12,17 @@ class Snake
         Snake(SDL_Renderer* renderer, float posX, float posY);
         ~Snake();
 
-        void Move(vector2 dir);
+        void Move(Vector2 dir);
         void Render(SDL_Renderer* renderer);
         bool CheckCollision();
 
     private:
-        float mPosX;
-        float mPosY;
         int mLength;
-        int mRotation;
 
-        SDL_Texture* mHead;
+        // Index 0 is head
+        std::vector<Vector2Rot> mBodyPositions;
+
+        SDL_Texture* mHeadTex;
+        SDL_Texture* mBodyTex;
+        SDL_Texture* mTailTex;
 };

@@ -49,7 +49,7 @@ void Game::Run()
 	float deltaTime = 0;
 	
 	Snake snake(renderer, 2, 2);
-	vector2 snakeMoveDir = {0, 0};
+	Vector2 snakeMoveDir;
 	float moveDelay = 0;
 
 	// ---------- MAIN GAME LOOP ----------

@@ -2,59 +2,87 @@
 
 Snake::Snake(SDL_Renderer* renderer, float posX, float posY)
 {
-    mPosX = posX * GRID_SCALE;
-    mPosY = posY * GRID_SCALE;
     mLength = 3;
-    mRotation = 0;
 
-    mHead = LoadTexture(renderer, PATH_TO_IMGS, "snakeHead.png");
+    mBodyPositions.resize(mLength);
+
+    mBodyPositions[0] = {posX * GRID_SCALE, posY * GRID_SCALE, 0};
+
+    mHeadTex = LoadTexture(renderer, PATH_TO_IMGS, "snakeHead.png");
+    mBodyTex = LoadTexture(renderer, PATH_TO_IMGS, "snakeBody.png");
+    mTailTex = LoadTexture(renderer, PATH_TO_IMGS, "snakeTail.png");
 
     SDL_Log("Snake - init!\n");
 }
 
 Snake::~Snake()
 {
-    SDL_DestroyTexture(mHead);
+    SDL_DestroyTexture(mHeadTex);
+    SDL_DestroyTexture(mBodyTex);
+    SDL_DestroyTexture(mTailTex);
     SDL_Log("Snake - destroy!\n");
 }
 
-void Snake::Move(vector2 dir)
+void Snake::Move(Vector2 dir)
 {
-    mPosX += dir.x * GRID_SCALE;
-    mPosY += dir.y * GRID_SCALE;
+    // SDL_Log("---------------------------\n");
+    // Move snake body parts (exept head)
+    for (int i = mLength-1; i >= 1; i--)
+    {
+        mBodyPositions[i] = mBodyPositions[i-1];
+        // SDL_Log("Snake part %d pos = %.0f,%.0f\n", i, mBodyPositions[i].x, mBodyPositions[i].y);
+    }
 
-    if(dir.x == 1){ mRotation = 90; }
-    if(dir.x == -1){ mRotation = -90; }
-    if(dir.y == 1){ mRotation = 180; }
-    if(dir.y == -1){ mRotation = 0; }
+    // Move head
+    mBodyPositions[0].x += dir.x * GRID_SCALE;
+    mBodyPositions[0].y += dir.y * GRID_SCALE;
+
+    if(dir.x == 1){ mBodyPositions[0].rotarion = 90; }
+    if(dir.x == -1){ mBodyPositions[0].rotarion = -90; }
+    if(dir.y == 1){ mBodyPositions[0].rotarion = 180; }
+    if(dir.y == -1){ mBodyPositions[0].rotarion = 0; }
 }
 
 void Snake::Render(SDL_Renderer* renderer)
 {
-    SDL_FRect snakeRect = {mPosX, mPosY, 80, 80};
-    // SDL_Log("Snake x,y = %.0f,%.0f\n", mPosX, mPosY);
-    SDL_RenderTextureRotated(renderer, mHead, NULL, &snakeRect, mRotation, NULL, SDL_FLIP_NONE);
+    SDL_Texture* snakePartTex = mHeadTex;
+
+    for (int i = 0; i < mLength; i++)
+    {
+        if(i == mLength-1)
+        {
+            snakePartTex = mTailTex;
+        }
+        else if(i > 0)
+        {
+            snakePartTex = mBodyTex;
+        }
+        
+        SDL_FRect snakeRect = {mBodyPositions[i].x, mBodyPositions[i].y, GRID_SCALE, GRID_SCALE};
+        SDL_RenderTextureRotated(renderer, snakePartTex, NULL, &snakeRect, mBodyPositions[i].rotarion, NULL, SDL_FLIP_NONE);
+    }
+    
 }
 
 bool Snake::CheckCollision()
 {
     // ----- Check playable area borders -----
-    if(mPosX < 0)
+    if(mBodyPositions[0].x < 0)
     {
         SDL_Log("Snake - died!\n");
         return true;
     }
-    if(mPosY < 0)
+    if(mBodyPositions[0].y < 0)
     {
         SDL_Log("Snake - died!\n");
         return true;
     }
-    if(mPosX >= GRID_WIDTH * GRID_SCALE)
+    if(mBodyPositions[0].x >= GRID_WIDTH * GRID_SCALE)
     {
         SDL_Log("Snake - died!\n");
         return true;
     }
-    if(mPosY >= GRID_HEIGHT * GRID_SCALE)
+    if(mBodyPositions[0].y >= GRID_HEIGHT * GRID_SCALE)
     {
         SDL_Log("Snake - died!\n");
         return true;

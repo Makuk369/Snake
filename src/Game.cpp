@@ -40,7 +40,8 @@ Game::~Game()
 void Game::Run()
 {
 	SDL_Log("Game - running!\n");
-	mIsRunning = true;
+	bool isRunning = true;
+	GameState currentState = MAIN_MENU;
 
 	SDL_Event event;
 
@@ -48,25 +49,27 @@ void Game::Run()
 	timer.Start();
 	float deltaTime = 0;
 	
-	Snake snake(renderer, 2, 2);
-	Vector2 snakeMoveDir;
+	Snake snake(renderer, 5, 5);
+	Vector2 snakeMoveDir = {1, 0};
 	float moveDelay = 0;
 
 	// ---------- MAIN GAME LOOP ----------
-	while(mIsRunning)
+	while(isRunning)
 	{
-		deltaTime = timer.getDeltaTime();
-		// SDL_Log("Delta time = %f\n", deltaTime);
-		moveDelay += deltaTime;
-
 		while(SDL_PollEvent(&event) != 0)
 		{
 			if(event.type == SDL_EVENT_QUIT)
 			{
-				mIsRunning = false;
+				isRunning = false;
 			}
 			else if(event.type == SDL_EVENT_KEY_DOWN)
 			{
+				// start the game
+				if(event.key.key == SDLK_SPACE)
+				{
+					currentState = PLAYING;
+				}
+				// snake movement
 				if(event.key.key == SDLK_W)
 				{
 					snakeMoveDir = {0, -1};
@@ -86,23 +89,49 @@ void Game::Run()
 			}
 		}
 
-		if(moveDelay >= 0.5)
+		deltaTime = timer.getDeltaTime();
+		// SDL_Log("Delta time = %f\n", deltaTime);
+
+		switch (currentState)
 		{
-			snake.Move(snakeMoveDir);
-			moveDelay = 0;
+		case MAIN_MENU: // ---------------------------
+			//Clear screen
+			SDL_RenderClear(renderer);
+
+			snake.Render(renderer);
+
+			//Update screen
+			SDL_RenderPresent(renderer);
+			break;
+
+		case PLAYING: // -----------------------------
+			moveDelay += deltaTime;
+
+			if(moveDelay >= 0.5)
+			{
+				snake.Move(snakeMoveDir);
+				moveDelay = 0;
+			}
+			if(snake.CheckCollision())
+			{
+				isRunning = false;
+			}
+
+			//Clear screen
+			SDL_RenderClear(renderer);
+
+			snake.Render(renderer);
+
+			//Update screen
+			SDL_RenderPresent(renderer);
+			break;
+
+		case DEATH_MENU: // ---------------------------
+			
+			break;
+		
+		default:
+			break;
 		}
-		if(snake.CheckCollision())
-		{
-			mIsRunning = false;
-		}
-
-		// ---------- RENDERING ----------
-		//Clear screen
-		SDL_RenderClear(renderer);
-
-		snake.Render(renderer);
-
-		//Update screen
-		SDL_RenderPresent(renderer);
 	}
 }

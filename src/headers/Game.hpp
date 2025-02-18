@@ -21,6 +21,11 @@ class Game
     private:
         int mScreenWidth;
         int mScreenHeight;
-        
-        bool mIsRunning;
+
+        enum GameState
+        {
+            MAIN_MENU,
+            PLAYING,
+            DEATH_MENU
+        };
 };

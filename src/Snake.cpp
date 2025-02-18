@@ -6,7 +6,9 @@ Snake::Snake(SDL_Renderer* renderer, float posX, float posY)
 
     mBodyPositions.resize(mLength);
 
-    mBodyPositions[0] = {posX * GRID_SCALE, posY * GRID_SCALE, 0};
+    mBodyPositions[0] = {posX * GRID_SCALE, posY * GRID_SCALE, 90};
+    mBodyPositions[1] = {(posX-1) * GRID_SCALE, posY * GRID_SCALE, 90};
+    mBodyPositions[2] = {(posX-2) * GRID_SCALE, posY * GRID_SCALE, 90};
 
     mHeadTex = LoadTexture(renderer, PATH_TO_IMGS, "snakeHead.png");
     mBodyTex = LoadTexture(renderer, PATH_TO_IMGS, "snakeBody.png");

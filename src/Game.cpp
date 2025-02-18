@@ -22,18 +22,30 @@ Game::Game()
 	SDL_Log("SDL_CreateWindowAndRenderer - success!\n");
 
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // white = 255, 255, 255, 255
+
+	if(!TTF_Init())
+	{
+		SDL_Log("SDL_ttf could not initialize! SDL_ttf Error: %s\n", SDL_GetError());
+	}
+	
+	mMainFont = TTF_OpenFont("../assets/fonts/lazy.ttf", 28);
+	if(mMainFont == NULL)
+	{
+		SDL_Log("Failed to load font! SDL_ttf Error: %s\n", SDL_GetError());
+	}
 }
 Game::~Game()
 {
-	// DestroyTextures(textures);
-
 	SDL_DestroyRenderer(renderer);
+	renderer = NULL;
 	SDL_DestroyWindow(window);
 	window = NULL;
-	renderer = NULL;
+	TTF_CloseFont(mMainFont);
+	mMainFont = NULL;
 
 	//Quit SDL subsystems
 	SDL_Quit();
+	TTF_Quit();
 	SDL_Log("Game - quit!\n");
 }
 
@@ -48,6 +60,9 @@ void Game::Run()
 	Timer timer;
 	timer.Start();
 	float deltaTime = 0;
+
+	Texture textTexture(renderer);
+	textTexture.LoadFromRenderedText(mMainFont, "The quick brown fox jumps over the lazy dog", {0, 0, 0});
 	
 	Snake snake(renderer, 5, 5);
 	Vector2 snakeMoveDir = {1, 0};
@@ -98,7 +113,8 @@ void Game::Run()
 			//Clear screen
 			SDL_RenderClear(renderer);
 
-			snake.Render(renderer);
+			// snake.Render(renderer);
+			textTexture.Render((mScreenWidth - textTexture.getWidth()) / 2, (mScreenHeight - textTexture.getHeight()) / 2);
 
 			//Update screen
 			SDL_RenderPresent(renderer);
@@ -114,7 +130,7 @@ void Game::Run()
 			}
 			if(snake.CheckCollision())
 			{
-				isRunning = false;
+				currentState = DEATH_MENU;
 			}
 
 			//Clear screen
@@ -127,7 +143,7 @@ void Game::Run()
 			break;
 
 		case DEATH_MENU: // ---------------------------
-			
+			isRunning = false;
 			break;
 		
 		default:

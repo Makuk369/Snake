@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include "GameSettings.hpp"
 #include "AssetHandling.hpp"
 #include "Timer.hpp"
@@ -28,4 +29,6 @@ class Game
             PLAYING,
             DEATH_MENU
         };
+
+        TTF_Font* mMainFont;
 };

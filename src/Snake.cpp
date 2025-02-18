@@ -10,9 +10,9 @@ Snake::Snake(SDL_Renderer* renderer, float posX, float posY)
     mBodyPositions[1] = {(posX-1) * GRID_SCALE, posY * GRID_SCALE, 90};
     mBodyPositions[2] = {(posX-2) * GRID_SCALE, posY * GRID_SCALE, 90};
 
-    mHeadTex = LoadTexture(renderer, PATH_TO_IMGS, "snakeHead.png");
-    mBodyTex = LoadTexture(renderer, PATH_TO_IMGS, "snakeBody.png");
-    mTailTex = LoadTexture(renderer, PATH_TO_IMGS, "snakeTail.png");
+    // mHeadTex = LoadTexture(renderer, PATH_TO_IMGS, "snakeHead.png");
+    // mBodyTex = LoadTexture(renderer, PATH_TO_IMGS, "snakeBody.png");
+    // mTailTex = LoadTexture(renderer, PATH_TO_IMGS, "snakeTail.png");
 
     SDL_Log("Snake - init!\n");
 }

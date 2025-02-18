@@ -1,11 +1,44 @@
 #pragma once
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <string>
 
-#define PATH_TO_IMGS std::string("../assets/imgs/")
+//Texture wrapper class
+class Texture
+{
+	public:
+		Texture(SDL_Renderer* renderer);
 
-SDL_Texture* LoadTexture(SDL_Renderer* renderer, std::string path);
-SDL_Texture* LoadTexture(SDL_Renderer* renderer, std::string pathBase, std::string pathEnd);
+		~Texture();
 
-// void DestroyTextures();
+		//Loads image at specified path
+		bool LoadFromFile(std::string path);
+		
+		//Creates image from font string
+		bool LoadFromRenderedText(TTF_Font* font, std::string textureText, SDL_Color textColor);
+
+		//Deallocates texture
+		void Free();
+
+		void setColor(Uint8 red, Uint8 green, Uint8 blue);
+
+		void setBlendMode(SDL_BlendMode blending);
+
+		void setAlpha(Uint8 alpha);
+		
+		void Render(int x, int y, SDL_FRect* clip = NULL, double angle = 0.0, SDL_FPoint* center = NULL, SDL_FlipMode flip = SDL_FLIP_NONE);
+
+		int getWidth();
+		int getHeight();
+
+	private:
+		//The actual hardware texture
+		SDL_Texture* mTexture;
+
+        SDL_Renderer* mRenderer;
+
+		//Image dimensions
+		int mWidth;
+		int mHeight;
+};

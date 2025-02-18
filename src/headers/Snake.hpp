@@ -2,6 +2,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <vector>
+#include <memory>
 #include "GameSettings.hpp"
 #include "Structures.hpp"
 #include "AssetHandling.hpp"
@@ -22,7 +23,7 @@ class Snake
         // Index 0 is head
         std::vector<Vector2Rot> mBodyPositions;
 
-        SDL_Texture* mHeadTex;
-        SDL_Texture* mBodyTex;
-        SDL_Texture* mTailTex;
+        Texture mHeadTex;
+        Texture mBodyTex;
+        Texture mTailTex;
 };

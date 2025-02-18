@@ -27,7 +27,7 @@ Game::Game()
 	{
 		SDL_Log("SDL_ttf could not initialize! SDL_ttf Error: %s\n", SDL_GetError());
 	}
-	
+
 	mMainFont = TTF_OpenFont("../assets/fonts/lazy.ttf", 28);
 	if(mMainFont == NULL)
 	{
@@ -62,7 +62,7 @@ void Game::Run()
 	float deltaTime = 0;
 
 	Texture textTexture(renderer);
-	textTexture.LoadFromRenderedText(mMainFont, "The quick brown fox jumps over the lazy dog", {0, 0, 0});
+	textTexture.LoadFromRenderedText(mMainFont, "Press SPACE to START", {0, 0, 0});
 	
 	Snake snake(renderer, 5, 5);
 	Vector2 snakeMoveDir = {1, 0};
@@ -113,7 +113,7 @@ void Game::Run()
 			//Clear screen
 			SDL_RenderClear(renderer);
 
-			// snake.Render(renderer);
+			snake.Render(renderer);
 			textTexture.Render((mScreenWidth - textTexture.getWidth()) / 2, (mScreenHeight - textTexture.getHeight()) / 2);
 
 			//Update screen

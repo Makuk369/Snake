@@ -1,27 +1,26 @@
 #include "headers/Snake.hpp"
 
 Snake::Snake(SDL_Renderer* renderer, float posX, float posY)
+    :mLength(3), mHeadTex(renderer), mBodyTex(renderer), mTailTex(renderer)
 {
-    mLength = 3;
-
     mBodyPositions.resize(mLength);
 
     mBodyPositions[0] = {posX * GRID_SCALE, posY * GRID_SCALE, 90};
     mBodyPositions[1] = {(posX-1) * GRID_SCALE, posY * GRID_SCALE, 90};
     mBodyPositions[2] = {(posX-2) * GRID_SCALE, posY * GRID_SCALE, 90};
 
-    // mHeadTex = LoadTexture(renderer, PATH_TO_IMGS, "snakeHead.png");
-    // mBodyTex = LoadTexture(renderer, PATH_TO_IMGS, "snakeBody.png");
-    // mTailTex = LoadTexture(renderer, PATH_TO_IMGS, "snakeTail.png");
+    mHeadTex.LoadFromFile("../assets/imgs/snakeHead.png");
+    mBodyTex.LoadFromFile("../assets/imgs/snakeBody.png");
+    mTailTex.LoadFromFile("../assets/imgs/snakeTail.png");
 
     SDL_Log("Snake - init!\n");
 }
 
 Snake::~Snake()
 {
-    SDL_DestroyTexture(mHeadTex);
-    SDL_DestroyTexture(mBodyTex);
-    SDL_DestroyTexture(mTailTex);
+    mHeadTex.Free();
+    mBodyTex.Free();
+    mTailTex.Free();
     SDL_Log("Snake - destroy!\n");
 }
 
@@ -47,21 +46,20 @@ void Snake::Move(Vector2 dir)
 
 void Snake::Render(SDL_Renderer* renderer)
 {
-    SDL_Texture* snakePartTex = mHeadTex;
+    Texture* snakePartTex = &mHeadTex;
 
     for (int i = 0; i < mLength; i++)
     {
         if(i == mLength-1)
         {
-            snakePartTex = mTailTex;
+            snakePartTex = &mTailTex;
         }
         else if(i > 0)
         {
-            snakePartTex = mBodyTex;
+            snakePartTex = &mBodyTex;
         }
         
-        SDL_FRect snakeRect = {mBodyPositions[i].x, mBodyPositions[i].y, GRID_SCALE, GRID_SCALE};
-        SDL_RenderTextureRotated(renderer, snakePartTex, NULL, &snakeRect, mBodyPositions[i].rotarion, NULL, SDL_FLIP_NONE);
+        snakePartTex->Render(mBodyPositions[i].x, mBodyPositions[i].y, 10, NULL, mBodyPositions[i].rotarion, NULL);
     }
     
 }

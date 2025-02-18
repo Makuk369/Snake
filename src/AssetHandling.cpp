@@ -18,9 +18,6 @@ bool Texture::LoadFromFile(std::string path)
 	//Get rid of preexisting texture
 	Free();
 
-	//The final texture
-	SDL_Texture* newTexture = NULL;
-
 	//Load image at specified path
 	SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
 	if( loadedSurface == NULL )
@@ -29,17 +26,16 @@ bool Texture::LoadFromFile(std::string path)
 	}
 	else
 	{
-		//Color key image
-		SDL_SetSurfaceColorKey(loadedSurface, true, SDL_MapSurfaceRGB(loadedSurface, 0, 0xFF, 0xFF));
-
 		//Create texture from surface pixels
-		newTexture = SDL_CreateTextureFromSurface(mRenderer, loadedSurface);
-		if( newTexture == NULL )
+		mTexture = SDL_CreateTextureFromSurface(mRenderer, loadedSurface);
+		if( mTexture == NULL )
 		{
 			SDL_Log( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
 		}
 		else
 		{
+			SDL_SetTextureScaleMode(mTexture, SDL_SCALEMODE_NEAREST);
+
 			//Get image dimensions
 			mWidth = loadedSurface->w;
 			mHeight = loadedSurface->h;
@@ -50,7 +46,6 @@ bool Texture::LoadFromFile(std::string path)
 	}
 
 	//Return success
-	mTexture = newTexture;
 	return mTexture != NULL;
 }
 
@@ -75,6 +70,8 @@ bool Texture::LoadFromRenderedText(TTF_Font* font, std::string textureText, SDL_
 		}
 		else
 		{
+			SDL_SetTextureScaleMode(mTexture, SDL_SCALEMODE_NEAREST);
+
 			//Get image dimensions
 			mWidth = textSurface->w;
 			mHeight = textSurface->h;
@@ -119,28 +116,28 @@ void Texture::setAlpha(Uint8 alpha)
 	SDL_SetTextureAlphaMod(mTexture, alpha);
 }
 
-void Texture::Render(int x, int y, SDL_FRect* clip, double angle, SDL_FPoint* center, SDL_FlipMode flip)
+void Texture::Render(float x, float y, float scale, SDL_FRect* clip, double angle, SDL_FPoint* center, SDL_FlipMode flip)
 {
 	//Set rendering space and render to screen
-	SDL_FRect renderQuad = {(float)x, (float)y, (float)mWidth, (float)mHeight};
+	SDL_FRect renderQuad = {x, y, mWidth * scale, mHeight * scale};
 
 	//Set clip rendering dimensions
-	if( clip != NULL )
+	if(clip != NULL)
 	{
-		renderQuad.w = clip->w;
-		renderQuad.h = clip->h;
+		renderQuad.w = clip->w * scale;
+		renderQuad.h = clip->h * scale;
 	}
 
 	//Render to screen
 	SDL_RenderTextureRotated(mRenderer, mTexture, clip, &renderQuad, angle, center, flip);
 }
 
-int Texture::getWidth()
+float Texture::getWidth()
 {
 	return mWidth;
 }
 
-int Texture::getHeight()
+float Texture::getHeight()
 {
 	return mHeight;
 }

@@ -27,10 +27,10 @@ class Texture
 
 		void setAlpha(Uint8 alpha);
 		
-		void Render(int x, int y, SDL_FRect* clip = NULL, double angle = 0.0, SDL_FPoint* center = NULL, SDL_FlipMode flip = SDL_FLIP_NONE);
+		void Render(float x, float y, float scale = 1, SDL_FRect* clip = NULL, double angle = 0.0, SDL_FPoint* center = NULL, SDL_FlipMode flip = SDL_FLIP_NONE);
 
-		int getWidth();
-		int getHeight();
+		float getWidth();
+		float getHeight();
 
 	private:
 		//The actual hardware texture
@@ -39,6 +39,6 @@ class Texture
         SDL_Renderer* mRenderer;
 
 		//Image dimensions
-		int mWidth;
-		int mHeight;
+		float mWidth;
+		float mHeight;
 };

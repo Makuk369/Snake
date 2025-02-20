@@ -10,7 +10,6 @@ Game::Game()
 		SDL_Log( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
 		return;
 	}
-	SDL_Log("SDL_Init - success!\n");
 
 	if(!SDL_CreateWindowAndRenderer("Snake", mScreenWidth, mScreenHeight, 0, &window, &renderer))
 	{
@@ -19,7 +18,6 @@ Game::Game()
 	}
 	//Enable vsync
 	SDL_SetRenderVSync(renderer, 1);
-	SDL_Log("SDL_CreateWindowAndRenderer - success!\n");
 
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // white = 255, 255, 255, 255
 
@@ -28,11 +26,13 @@ Game::Game()
 		SDL_Log("SDL_ttf could not initialize! SDL_ttf Error: %s\n", SDL_GetError());
 	}
 
-	mMainFont = TTF_OpenFont("../assets/fonts/lazy.ttf", 28);
-	if(mMainFont == NULL)
+	mBigFont = TTF_OpenFont("../assets/fonts/Roboto-Bold.ttf", 64);
+	if(mBigFont == NULL)
 	{
 		SDL_Log("Failed to load font! SDL_ttf Error: %s\n", SDL_GetError());
 	}
+
+	SDL_Log("Game - init!\n");
 }
 Game::~Game()
 {
@@ -40,8 +40,8 @@ Game::~Game()
 	renderer = NULL;
 	SDL_DestroyWindow(window);
 	window = NULL;
-	TTF_CloseFont(mMainFont);
-	mMainFont = NULL;
+	TTF_CloseFont(mBigFont);
+	mBigFont = NULL;
 
 	//Quit SDL subsystems
 	SDL_Quit();
@@ -61,8 +61,8 @@ void Game::Run()
 	timer.Start();
 	float deltaTime = 0;
 
-	Texture textTexture(renderer);
-	textTexture.LoadFromRenderedText(mMainFont, "Press SPACE to START", {0, 0, 0});
+	Texture mainMenuTxtTex(renderer);
+	mainMenuTxtTex.LoadFromRenderedText(mBigFont, "Press SPACE to START", {0, 0, 0});
 	
 	Snake snake(renderer, 5, 5);
 	Vector2 snakeMoveDir = {1, 0};
@@ -114,7 +114,7 @@ void Game::Run()
 			SDL_RenderClear(renderer);
 
 			snake.Render(renderer);
-			textTexture.Render((mScreenWidth - textTexture.getWidth()) / 2, (mScreenHeight - textTexture.getHeight()) / 2);
+			mainMenuTxtTex.Render((mScreenWidth - mainMenuTxtTex.getWidth()) / 2, (mScreenHeight - mainMenuTxtTex.getHeight()) / 4);
 
 			//Update screen
 			SDL_RenderPresent(renderer);
@@ -130,6 +130,7 @@ void Game::Run()
 			}
 			if(snake.CheckCollision())
 			{
+				SDL_Log("Snake - died!\n");
 				currentState = DEATH_MENU;
 			}
 

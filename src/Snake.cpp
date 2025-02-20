@@ -61,7 +61,6 @@ void Snake::Render(SDL_Renderer* renderer)
         
         snakePartTex->Render(mBodyPositions[i].x, mBodyPositions[i].y, 10, NULL, mBodyPositions[i].rotarion, NULL);
     }
-    
 }
 
 bool Snake::CheckCollision()
@@ -69,24 +68,30 @@ bool Snake::CheckCollision()
     // ----- Check playable area borders -----
     if(mBodyPositions[0].x < 0)
     {
-        SDL_Log("Snake - died!\n");
         return true;
     }
     if(mBodyPositions[0].y < 0)
     {
-        SDL_Log("Snake - died!\n");
         return true;
     }
     if(mBodyPositions[0].x >= GRID_WIDTH * GRID_SCALE)
     {
-        SDL_Log("Snake - died!\n");
         return true;
     }
     if(mBodyPositions[0].y >= GRID_HEIGHT * GRID_SCALE)
     {
-        SDL_Log("Snake - died!\n");
         return true;
     }
+
+    // ----- Check if head on body part -----
+    for (size_t i = 1; i < mLength; i++)
+    {
+        if((mBodyPositions[0].x == mBodyPositions[i].x) && (mBodyPositions[0].y == mBodyPositions[i].y))
+        {
+            return true;
+        }
+    }
+    
 
     return false;
 }

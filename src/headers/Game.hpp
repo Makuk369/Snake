@@ -30,5 +30,5 @@ class Game
             DEATH_MENU
         };
 
-        TTF_Font* mMainFont;
+        TTF_Font* mBigFont;
 };

@@ -23,6 +23,7 @@ class Game
     private:
         int mScreenWidth;
         int mScreenHeight;
+        int mScore;
 
         enum GameState
         {

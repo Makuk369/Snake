@@ -1,10 +1,8 @@
 #include "headers/Game.hpp"
 
 Game::Game()
+	:mScreenWidth(GRID_WIDTH * GRID_SCALE), mScreenHeight(GRID_HEIGHT * GRID_SCALE), mScore(0)
 {
-	mScreenWidth = GRID_WIDTH * GRID_SCALE;
-	mScreenHeight = GRID_HEIGHT * GRID_SCALE;
-
 	if(!SDL_Init(SDL_INIT_VIDEO))
 	{
 		SDL_Log( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
@@ -137,7 +135,8 @@ void Game::Run()
 
 				if(snake.CheckCollisionWith(apple.getPosition()))
 				{
-					apple.GetEaten();
+					apple.Respawn(snake.getPositions());
+					mScore += 10;
 				}
 
 				moveDelay = 0;

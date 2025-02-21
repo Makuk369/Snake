@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL3/SDL.h>
+#include <vector>
 #include "GameSettings.hpp"
 #include "Structures.hpp"
 #include "AssetHandling.hpp"
@@ -10,16 +11,13 @@ class Apple
         Apple(SDL_Renderer* renderer);
         ~Apple();
 
-        void GetEaten();
-        void Respawn();
+        void Respawn(const std::vector<Vector2Rot>& snakePositions);
         void Render();
 
         Vector2 getPosition();
 
     private:
         Vector2 mPosition;
-
-        bool mIsEaten;
 
         Texture mTex;
 };

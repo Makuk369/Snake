@@ -1,7 +1,7 @@
 #include "headers/Apple.hpp"
 
 Apple::Apple(SDL_Renderer *renderer)
-    :mPosition(), mIsEaten(false), mTex(renderer)
+    :mPosition(), mTex(renderer)
 {
     mTex.LoadFromFile("../assets/imgs/apple.png");
  
@@ -17,23 +17,34 @@ Apple::~Apple()
     SDL_Log("Apple - destroy!\n");
 }
 
-void Apple::GetEaten()
+void Apple::Respawn(const std::vector<Vector2Rot>& snakePositions)
 {
-    mIsEaten = true;
-    SDL_Log("Apple - eaten!\n");
-}
+    Vector2 respawnPos;
+    bool isFreePos = true;
 
-void Apple::Respawn()
-{
-    SDL_rand(10);
+    do
+    {
+        isFreePos = true;
+        respawnPos = {(float)(SDL_rand(GRID_WIDTH) * GRID_SCALE), (float)(SDL_rand(GRID_HEIGHT) * GRID_SCALE)};
+    
+        // check if respawnPos is set on snake
+        for (Vector2Rot snakePos : snakePositions)
+        {
+            if((respawnPos.x == snakePos.x) && (respawnPos.y == snakePos.y))
+            {
+                isFreePos = false;
+                // SDL_Log("RespawnPos is on snake!\n");
+            }
+        }
+    } while (!isFreePos);
+    
+    mPosition.x = respawnPos.x;
+    mPosition.y = respawnPos.y;
 }
 
 void Apple::Render()
 {
-    if(!mIsEaten)
-    {
-        mTex.Render(mPosition.x, mPosition.y, GRID_SCALE / mTex.getWidth());
-    }
+    mTex.Render(mPosition.x, mPosition.y, GRID_SCALE / mTex.getWidth());
 }
 
 Vector2 Apple::getPosition()

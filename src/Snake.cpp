@@ -104,3 +104,8 @@ bool Snake::CheckCollisionWith(Vector2 otherPos)
 
     return false;
 }
+
+std::vector<Vector2Rot> Snake::getPositions()
+{
+    return mBodyPositions;
+}

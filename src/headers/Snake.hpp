@@ -16,6 +16,8 @@ class Snake
         bool CheckCollision();
         bool CheckCollisionWith(Vector2 otherPos);
 
+        std::vector<Vector2Rot> getPositions();
+
     private:
         int mLength;
 

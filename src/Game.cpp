@@ -68,6 +68,8 @@ void Game::Run()
 	Vector2 snakeMoveDir = {1, 0};
 	float moveDelay = 0;
 
+	Apple apple(renderer);
+
 	// ---------- MAIN GAME LOOP ----------
 	while(isRunning)
 	{
@@ -113,7 +115,7 @@ void Game::Run()
 			//Clear screen
 			SDL_RenderClear(renderer);
 
-			snake.Render(renderer);
+			snake.Render();
 			mainMenuTxtTex.Render((mScreenWidth - mainMenuTxtTex.getWidth()) / 2, (mScreenHeight - mainMenuTxtTex.getHeight()) / 4);
 
 			//Update screen
@@ -126,18 +128,27 @@ void Game::Run()
 			if(moveDelay >= 0.5)
 			{
 				snake.Move(snakeMoveDir);
+
+				if(snake.CheckCollision())
+				{
+					SDL_Log("Snake - died!\n");
+					currentState = DEATH_MENU;
+				}
+
+				if(snake.CheckCollisionWith(apple.getPosition()))
+				{
+					apple.GetEaten();
+				}
+
 				moveDelay = 0;
 			}
-			if(snake.CheckCollision())
-			{
-				SDL_Log("Snake - died!\n");
-				currentState = DEATH_MENU;
-			}
 
+			
 			//Clear screen
 			SDL_RenderClear(renderer);
-
-			snake.Render(renderer);
+			
+			apple.Render();
+			snake.Render();
 
 			//Update screen
 			SDL_RenderPresent(renderer);

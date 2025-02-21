@@ -44,7 +44,7 @@ void Snake::Move(Vector2 dir)
     if(dir.y == -1){ mBodyPositions[0].rotarion = 0; }
 }
 
-void Snake::Render(SDL_Renderer* renderer)
+void Snake::Render()
 {
     Texture* snakePartTex = &mHeadTex;
 
@@ -59,7 +59,7 @@ void Snake::Render(SDL_Renderer* renderer)
             snakePartTex = &mBodyTex;
         }
         
-        snakePartTex->Render(mBodyPositions[i].x, mBodyPositions[i].y, 10, NULL, mBodyPositions[i].rotarion, NULL);
+        snakePartTex->Render(mBodyPositions[i].x, mBodyPositions[i].y, GRID_SCALE / snakePartTex->getWidth(), NULL, mBodyPositions[i].rotarion, NULL);
     }
 }
 
@@ -91,7 +91,16 @@ bool Snake::CheckCollision()
             return true;
         }
     }
-    
+
+    return false;
+}
+
+bool Snake::CheckCollisionWith(Vector2 otherPos)
+{
+    if((mBodyPositions[0].x == otherPos.x) && (mBodyPositions[0].y == otherPos.y))
+    {
+        return true;
+    }
 
     return false;
 }

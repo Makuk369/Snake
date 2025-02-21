@@ -7,6 +7,7 @@
 #include "Timer.hpp"
 #include "Structures.hpp"
 #include "Snake.hpp"
+#include "Apple.hpp"
 
 class Game
 {

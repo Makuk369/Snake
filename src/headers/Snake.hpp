@@ -1,8 +1,6 @@
 #pragma once
 #include <SDL3/SDL.h>
-#include <SDL3_image/SDL_image.h>
 #include <vector>
-#include <memory>
 #include "GameSettings.hpp"
 #include "Structures.hpp"
 #include "AssetHandling.hpp"
@@ -14,8 +12,9 @@ class Snake
         ~Snake();
 
         void Move(Vector2 dir);
-        void Render(SDL_Renderer* renderer);
+        void Render();
         bool CheckCollision();
+        bool CheckCollisionWith(Vector2 otherPos);
 
     private:
         int mLength;

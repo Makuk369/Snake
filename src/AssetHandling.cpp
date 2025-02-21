@@ -16,7 +16,7 @@ Texture::~Texture()
 bool Texture::LoadFromFile(std::string path)
 {
 	//Get rid of preexisting texture
-	Free();
+	Free(true);
 
 	//Load image at specified path
 	SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
@@ -52,7 +52,7 @@ bool Texture::LoadFromFile(std::string path)
 bool Texture::LoadFromRenderedText(TTF_Font* font, std::string textureText, SDL_Color textColor)
 {
 	//Get rid of preexisting texture
-	Free();
+	Free(true);
 
 	//Render text surface
 	SDL_Surface* textSurface = TTF_RenderText_Blended(font, textureText.c_str(), 0, textColor);
@@ -70,8 +70,6 @@ bool Texture::LoadFromRenderedText(TTF_Font* font, std::string textureText, SDL_
 		}
 		else
 		{
-			SDL_SetTextureScaleMode(mTexture, SDL_SCALEMODE_NEAREST);
-
 			//Get image dimensions
 			mWidth = textSurface->w;
 			mHeight = textSurface->h;
@@ -85,14 +83,17 @@ bool Texture::LoadFromRenderedText(TTF_Font* font, std::string textureText, SDL_
 	return mTexture != NULL;
 }
 
-void Texture::Free()
+void Texture::Free(bool skipRenderer)
 {
 	//Free texture if it exists
 	if(mTexture != NULL)
 	{
+		if(!skipRenderer)
+		{
+			mRenderer = NULL;
+		}
 		SDL_DestroyTexture( mTexture );
 		mTexture = NULL;
-		mRenderer = NULL;
 		mWidth = 0;
 		mHeight = 0;
 	}

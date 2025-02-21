@@ -19,7 +19,7 @@ class Texture
 		bool LoadFromRenderedText(TTF_Font* font, std::string textureText, SDL_Color textColor);
 
 		//Deallocates texture
-		void Free();
+		void Free(bool skipRenderer = false);
 
 		void Render(float x, float y, float scale = 1, SDL_FRect* clip = NULL, double angle = 0.0, SDL_FPoint* center = NULL, SDL_FlipMode flip = SDL_FLIP_NONE);
 		

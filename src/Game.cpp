@@ -24,8 +24,14 @@ Game::Game()
 		SDL_Log("SDL_ttf could not initialize! SDL_ttf Error: %s\n", SDL_GetError());
 	}
 
-	mBigFont = TTF_OpenFont("../assets/fonts/Roboto-Bold.ttf", 64);
-	if(mBigFont == NULL)
+	mMenuFont = TTF_OpenFont("../assets/fonts/Roboto-Bold.ttf", 64);
+	if(mMenuFont == NULL)
+	{
+		SDL_Log("Failed to load font! SDL_ttf Error: %s\n", SDL_GetError());
+	}
+
+	mScoreFont = TTF_OpenFont("../assets/fonts/Roboto-Bold.ttf", 256);
+	if(mScoreFont == NULL)
 	{
 		SDL_Log("Failed to load font! SDL_ttf Error: %s\n", SDL_GetError());
 	}
@@ -38,8 +44,10 @@ Game::~Game()
 	renderer = NULL;
 	SDL_DestroyWindow(window);
 	window = NULL;
-	TTF_CloseFont(mBigFont);
-	mBigFont = NULL;
+	TTF_CloseFont(mMenuFont);
+	mMenuFont = NULL;
+	TTF_CloseFont(mScoreFont);
+	mScoreFont = NULL;
 
 	//Quit SDL subsystems
 	SDL_Quit();
@@ -60,7 +68,11 @@ void Game::Run()
 	float deltaTime = 0;
 
 	Texture mainMenuTxtTex(renderer);
-	mainMenuTxtTex.LoadFromRenderedText(mBigFont, "Press SPACE to START", {0, 0, 0});
+	mainMenuTxtTex.LoadFromRenderedText(mMenuFont, "Press SPACE to START", {0, 0, 0});
+
+	Texture scoreTxtTex(renderer);
+	scoreTxtTex.LoadFromRenderedText(mScoreFont, std::to_string(mScore), {0, 0, 0, 32});
+	float scoreTxtScale = SDL_min(2, mScreenWidth / scoreTxtTex.getWidth());
 	
 	Snake snake(renderer, 5, 5);
 	Vector2 snakeMoveDir = {1, 0};
@@ -122,7 +134,6 @@ void Game::Run()
 
 		case PLAYING: // ------------------------------------------------------------------
 			moveDelay += deltaTime;
-
 			if(moveDelay >= 0.5)
 			{
 				snake.Move(snakeMoveDir);
@@ -139,7 +150,10 @@ void Game::Run()
 				{
 					apple.Respawn(snake.getPositions());
 					snake.Grow(2);
+
 					mScore += 10;
+					scoreTxtTex.LoadFromRenderedText(mScoreFont, std::to_string(mScore), {0, 0, 0, 32});
+					scoreTxtScale = SDL_min(2, mScreenWidth / scoreTxtTex.getWidth());
 				}
 
 				moveDelay = 0;
@@ -149,6 +163,7 @@ void Game::Run()
 			//Clear screen
 			SDL_RenderClear(renderer);
 			
+			scoreTxtTex.Render((mScreenWidth - scoreTxtTex.getWidth() * scoreTxtScale) / 2, (mScreenHeight - scoreTxtTex.getHeight() * scoreTxtScale) / 2, scoreTxtScale);
 			apple.Render();
 			snake.Render();
 
@@ -156,7 +171,7 @@ void Game::Run()
 			SDL_RenderPresent(renderer);
 			break;
 
-		case DEATH_MENU: // ---------------------------
+		case DEATH_MENU: // ------------------------------------------------------------------
 			isRunning = false;
 			break;
 		

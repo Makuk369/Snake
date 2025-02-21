@@ -21,13 +21,13 @@ class Texture
 		//Deallocates texture
 		void Free();
 
+		void Render(float x, float y, float scale = 1, SDL_FRect* clip = NULL, double angle = 0.0, SDL_FPoint* center = NULL, SDL_FlipMode flip = SDL_FLIP_NONE);
+		
 		void setColor(Uint8 red, Uint8 green, Uint8 blue);
+		
 
 		void setBlendMode(SDL_BlendMode blending);
-
 		void setAlpha(Uint8 alpha);
-		
-		void Render(float x, float y, float scale = 1, SDL_FRect* clip = NULL, double angle = 0.0, SDL_FPoint* center = NULL, SDL_FlipMode flip = SDL_FLIP_NONE);
 
 		float getWidth();
 		float getHeight();

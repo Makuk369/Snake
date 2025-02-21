@@ -109,7 +109,7 @@ void Game::Run()
 
 		switch (currentState)
 		{
-		case MAIN_MENU: // ---------------------------
+		case MAIN_MENU: // --------------------------------------------------------------
 			//Clear screen
 			SDL_RenderClear(renderer);
 
@@ -120,22 +120,25 @@ void Game::Run()
 			SDL_RenderPresent(renderer);
 			break;
 
-		case PLAYING: // -----------------------------
+		case PLAYING: // ------------------------------------------------------------------
 			moveDelay += deltaTime;
 
 			if(moveDelay >= 0.5)
 			{
 				snake.Move(snakeMoveDir);
 
+				// ded
 				if(snake.CheckCollision())
 				{
 					SDL_Log("Snake - died!\n");
 					currentState = DEATH_MENU;
 				}
 
+				// eat apple
 				if(snake.CheckCollisionWith(apple.getPosition()))
 				{
 					apple.Respawn(snake.getPositions());
+					snake.Grow(2);
 					mScore += 10;
 				}
 

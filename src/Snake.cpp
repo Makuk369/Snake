@@ -1,7 +1,7 @@
 #include "headers/Snake.hpp"
 
 Snake::Snake(SDL_Renderer* renderer, float posX, float posY)
-    :mLength(3), mHeadTex(renderer), mBodyTex(renderer), mTailTex(renderer)
+    :mLength(3), mHeadTex(renderer), mBodyTex(renderer)
 {
     mBodyPositions.resize(mLength);
 
@@ -11,7 +11,6 @@ Snake::Snake(SDL_Renderer* renderer, float posX, float posY)
 
     mHeadTex.LoadFromFile("../assets/imgs/snakeHead.png");
     mBodyTex.LoadFromFile("../assets/imgs/snakeBody.png");
-    mTailTex.LoadFromFile("../assets/imgs/snakeTail.png");
 
     SDL_Log("Snake - init!\n");
 }
@@ -20,18 +19,15 @@ Snake::~Snake()
 {
     mHeadTex.Free();
     mBodyTex.Free();
-    mTailTex.Free();
     SDL_Log("Snake - destroy!\n");
 }
 
 void Snake::Move(Vector2 dir)
 {
-    // SDL_Log("---------------------------\n");
     // Move snake body parts (exept head)
     for (int i = mLength-1; i >= 1; i--)
     {
         mBodyPositions[i] = mBodyPositions[i-1];
-        // SDL_Log("Snake part %d pos = %.0f,%.0f\n", i, mBodyPositions[i].x, mBodyPositions[i].y);
     }
 
     // Move head
@@ -44,21 +40,34 @@ void Snake::Move(Vector2 dir)
     if(dir.y == -1){ mBodyPositions[0].rotarion = 0; }
 }
 
+void Snake::Grow(int growSize)
+{
+    mLength += growSize;
+
+    mBodyPositions.resize(mLength, mBodyPositions[mLength-growSize-1]);
+}
+
 void Snake::Render()
 {
     Texture* snakePartTex = &mHeadTex;
 
+    Uint8 colorDarken = 50 / mLength;
+    Uint8 currentR = 125;
+    Uint8 currentG = 180;
+    Uint8 currentB = 65;
+
     for (int i = 0; i < mLength; i++)
     {
-        if(i == mLength-1)
-        {
-            snakePartTex = &mTailTex;
-        }
-        else if(i > 0)
+        if(i > 0)
         {
             snakePartTex = &mBodyTex;
+
+            currentR -= colorDarken;
+            currentG -= colorDarken;
+            currentB -= colorDarken;
+            snakePartTex->setColor(currentR, currentG, currentB);
         }
-        
+
         snakePartTex->Render(mBodyPositions[i].x, mBodyPositions[i].y, GRID_SCALE / snakePartTex->getWidth(), NULL, mBodyPositions[i].rotarion, NULL);
     }
 }

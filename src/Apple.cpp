@@ -1,7 +1,7 @@
 #include "headers/Apple.hpp"
 
 Apple::Apple(SDL_Renderer *renderer)
-    :mPosition(), mTex(renderer)
+    :mPosition({5 * GRID_SCALE, 3 * GRID_SCALE}), mTex(renderer)
 {
     mTex.LoadFromFile("../assets/imgs/apple.png");
  

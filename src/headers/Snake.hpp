@@ -12,6 +12,7 @@ class Snake
         ~Snake();
 
         void Move(Vector2 dir);
+        void Grow(int growSize);
         void Render();
         bool CheckCollision();
         bool CheckCollisionWith(Vector2 otherPos);
@@ -26,5 +27,4 @@ class Snake
 
         Texture mHeadTex;
         Texture mBodyTex;
-        Texture mTailTex;
 };

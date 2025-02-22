@@ -1,11 +1,18 @@
 #include "headers/AssetHandling.hpp"
+#include <iostream>
 
 Texture::Texture(SDL_Renderer* renderer)
+	: mTexture(NULL), mRenderer(renderer), mWidth(0), mHeight(0)
+{}
+
+Texture::Texture(SDL_Renderer* renderer, std::string pathToFont, Uint16 fontSize)
+	: mTexture(NULL), mRenderer(renderer), mWidth(0), mHeight(0), mFont(NULL), mText("")
 {
-	mTexture = NULL;
-	mRenderer = renderer;
-	mWidth = 0;
-	mHeight = 0;
+	mFont = TTF_OpenFont(pathToFont.c_str(), fontSize);
+	if(mFont == NULL)
+	{
+		SDL_Log("Failed to load font! SDL_ttf Error: %s\n", SDL_GetError());
+	}
 }
 
 Texture::~Texture()
@@ -49,24 +56,34 @@ bool Texture::LoadFromFile(std::string path)
 	return mTexture != NULL;
 }
 
-bool Texture::LoadFromRenderedText(TTF_Font* font, std::string textureText, SDL_Color textColor)
+bool Texture::LoadFromRenderedText(const std::string& setText, SDL_Color textColor)
 {
+	if(mText.compare(setText) == 0)
+	{
+		// SDL_Log("Trying to load a text texture with the same text: %s == %s", mText, setText);
+		return true;
+	}
+	else
+	{
+		mText = setText;
+	}
+
 	//Get rid of preexisting texture
 	Free(true);
 
 	//Render text surface
-	SDL_Surface* textSurface = TTF_RenderText_Blended(font, textureText.c_str(), 0, textColor);
-	if( textSurface == NULL )
+	SDL_Surface* textSurface = TTF_RenderText_Blended(mFont, setText.c_str(), 0, textColor);
+	if(textSurface == NULL)
 	{
-		SDL_Log( "Unable to render text surface! SDL_ttf Error: %s\n", SDL_GetError() );
+		SDL_Log("Unable to render text surface! SDL_ttf Error: %s\n", SDL_GetError());
 	}
 	else
 	{
 		//Create texture from surface pixels
 		mTexture = SDL_CreateTextureFromSurface(mRenderer, textSurface);
-		if( mTexture == NULL )
+		if(mTexture == NULL)
 		{
-			SDL_Log( "Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError() );
+			SDL_Log("Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError());
 		}
 		else
 		{
@@ -76,45 +93,48 @@ bool Texture::LoadFromRenderedText(TTF_Font* font, std::string textureText, SDL_
 		}
 
 		//Get rid of old surface
-		SDL_DestroySurface( textSurface );
+		SDL_DestroySurface(textSurface);
 	}
 	
 	//Return success
 	return mTexture != NULL;
 }
 
-void Texture::Free(bool skipRenderer)
+void Texture::Free(bool onlyReset)
 {
 	//Free texture if it exists
 	if(mTexture != NULL)
 	{
-		if(!skipRenderer)
+		if(!onlyReset)
 		{
 			mRenderer = NULL;
 		}
-		SDL_DestroyTexture( mTexture );
+		SDL_DestroyTexture(mTexture);
 		mTexture = NULL;
 		mWidth = 0;
 		mHeight = 0;
 	}
+	if(mFont != NULL)
+	{
+		if(!onlyReset)
+		{
+			TTF_CloseFont(mFont);
+			mFont = NULL;
+			mText.clear();
+		}
+	}
 }
 
-void Texture::setColor(Uint8 red, Uint8 green, Uint8 blue)
+void Texture::setColor(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
 {
-	//Modulate texture rgb
 	SDL_SetTextureColorMod(mTexture, red, green, blue);
+	SDL_SetTextureAlphaMod(mTexture, alpha);
 }
 
 void Texture::setBlendMode(SDL_BlendMode blending)
 {
 	//Set blending function
 	SDL_SetTextureBlendMode(mTexture, blending);
-}
-		
-void Texture::setAlpha(Uint8 alpha)
-{
-	//Modulate texture alpha
-	SDL_SetTextureAlphaMod(mTexture, alpha);
 }
 
 void Texture::Render(float x, float y, float scale, SDL_FRect* clip, double angle, SDL_FPoint* center, SDL_FlipMode flip)

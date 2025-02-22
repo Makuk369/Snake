@@ -1,4 +1,5 @@
 #include "headers/Game.hpp"
+#include <iostream>
 
 Game::Game()
 	:mScreenWidth(GRID_WIDTH * GRID_SCALE), mScreenHeight(GRID_HEIGHT * GRID_SCALE), mScore(0)
@@ -16,24 +17,11 @@ Game::Game()
 	}
 	//Enable vsync
 	SDL_SetRenderVSync(renderer, 1);
-
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // white = 255, 255, 255, 255
 
 	if(!TTF_Init())
 	{
 		SDL_Log("SDL_ttf could not initialize! SDL_ttf Error: %s\n", SDL_GetError());
-	}
-
-	mMenuFont = TTF_OpenFont("../assets/fonts/Roboto-Bold.ttf", 64);
-	if(mMenuFont == NULL)
-	{
-		SDL_Log("Failed to load font! SDL_ttf Error: %s\n", SDL_GetError());
-	}
-
-	mScoreFont = TTF_OpenFont("../assets/fonts/Roboto-Bold.ttf", 256);
-	if(mScoreFont == NULL)
-	{
-		SDL_Log("Failed to load font! SDL_ttf Error: %s\n", SDL_GetError());
 	}
 
 	SDL_Log("Game - init!\n");
@@ -44,10 +32,6 @@ Game::~Game()
 	renderer = NULL;
 	SDL_DestroyWindow(window);
 	window = NULL;
-	TTF_CloseFont(mMenuFont);
-	mMenuFont = NULL;
-	TTF_CloseFont(mScoreFont);
-	mScoreFont = NULL;
 
 	//Quit SDL subsystems
 	SDL_Quit();
@@ -67,12 +51,17 @@ void Game::Run()
 	timer.Start();
 	float deltaTime = 0;
 
-	Texture mainMenuTxtTex(renderer);
-	mainMenuTxtTex.LoadFromRenderedText(mMenuFont, "Press SPACE to START", {0, 0, 0});
+	Texture mainMenuTxtTex(renderer, "../assets/fonts/Roboto-Bold.ttf", 64);
+	mainMenuTxtTex.LoadFromRenderedText("Press SPACE to START", {0, 0, 0});
 
-	Texture scoreTxtTex(renderer);
-	scoreTxtTex.LoadFromRenderedText(mScoreFont, std::to_string(mScore), {0, 0, 0, 32});
+	Texture scoreTxtTex(renderer, "../assets/fonts/Roboto-Bold.ttf", 256);
+	scoreTxtTex.LoadFromRenderedText(std::to_string(mScore), {0, 0, 0, 32});
 	float scoreTxtScale = SDL_min(2, mScreenWidth / scoreTxtTex.getWidth());
+
+	// Texture deathMenuTxtTex(renderer, "../assets/fonts/Roboto-Bold.ttf", 64);
+	// deathMenuTxtTex.LoadFromRenderedText("YOU DIED!", {0, 0, 0});
+
+	
 	
 	Snake snake(renderer, 5, 5);
 	Vector2 snakeMoveDir = {1, 0};
@@ -100,6 +89,7 @@ void Game::Run()
 				if(event.key.key == SDLK_W)
 				{
 					snakeMoveDir = {0, -1};
+					mainMenuTxtTex.LoadFromRenderedText("Press SPACE to START", {0, 0, 0});
 				}
 				if(event.key.key == SDLK_A)
 				{
@@ -152,7 +142,7 @@ void Game::Run()
 					snake.Grow(2);
 
 					mScore += 10;
-					scoreTxtTex.LoadFromRenderedText(mScoreFont, std::to_string(mScore), {0, 0, 0, 32});
+					scoreTxtTex.LoadFromRenderedText(std::to_string(mScore), {0, 0, 0, 32});
 					scoreTxtScale = SDL_min(2, mScreenWidth / scoreTxtTex.getWidth());
 				}
 
@@ -172,6 +162,13 @@ void Game::Run()
 			break;
 
 		case DEATH_MENU: // ------------------------------------------------------------------
+			//Clear screen
+			// SDL_RenderClear(renderer);
+
+			// mainMenuTxtTex.Render((mScreenWidth - mainMenuTxtTex.getWidth()) / 2, (mScreenHeight - mainMenuTxtTex.getHeight()) / 4);
+
+			// //Update screen
+			// SDL_RenderPresent(renderer);
 			isRunning = false;
 			break;
 		

@@ -9,25 +9,25 @@ class Texture
 {
 	public:
 		Texture(SDL_Renderer* renderer);
+		Texture(SDL_Renderer* renderer, std::string pathToFont, Uint16 fontSize);
 
 		~Texture();
 
 		//Loads image at specified path
 		bool LoadFromFile(std::string path);
 		
-		//Creates image from font string
-		bool LoadFromRenderedText(TTF_Font* font, std::string textureText, SDL_Color textColor);
+		//Creates image from string if passed string is different from current
+		bool LoadFromRenderedText(const std::string& setText, SDL_Color textColor);
 
 		//Deallocates texture
-		void Free(bool skipRenderer = false);
+		void Free(bool onlyReset = false);
 
 		void Render(float x, float y, float scale = 1, SDL_FRect* clip = NULL, double angle = 0.0, SDL_FPoint* center = NULL, SDL_FlipMode flip = SDL_FLIP_NONE);
 		
-		void setColor(Uint8 red, Uint8 green, Uint8 blue);
-		
+		// R, G, B, A
+		void setColor(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha = 255);
 
 		void setBlendMode(SDL_BlendMode blending);
-		void setAlpha(Uint8 alpha);
 
 		float getWidth();
 		float getHeight();
@@ -37,6 +37,10 @@ class Texture
 		SDL_Texture* mTexture;
 
         SDL_Renderer* mRenderer;
+
+		// Used if its texture from text
+		TTF_Font* mFont;
+		std::string mText;
 
 		//Image dimensions
 		float mWidth;

@@ -2,7 +2,7 @@
 #include <iostream>
 
 Texture::Texture(SDL_Renderer* renderer)
-	: mTexture(NULL), mRenderer(renderer), mWidth(0), mHeight(0)
+	: mTexture(NULL), mRenderer(renderer), mWidth(0), mHeight(0), mFont(NULL), mText("")
 {}
 
 Texture::Texture(SDL_Renderer* renderer, std::string pathToFont, Uint16 fontSize)
@@ -18,12 +18,20 @@ Texture::Texture(SDL_Renderer* renderer, std::string pathToFont, Uint16 fontSize
 Texture::~Texture()
 {
 	Free();
+
+	mRenderer = NULL;
+
+	if(mFont != NULL)
+	{
+		TTF_CloseFont(mFont);
+		mFont = NULL;
+		mText.clear();
+	}
 }
 
 bool Texture::LoadFromFile(std::string path)
 {
-	//Get rid of preexisting texture
-	Free(true);
+	Free();
 
 	//Load image at specified path
 	SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
@@ -69,7 +77,7 @@ bool Texture::LoadFromRenderedText(const std::string& setText, SDL_Color textCol
 	}
 
 	//Get rid of preexisting texture
-	Free(true);
+	Free();
 
 	//Render text surface
 	SDL_Surface* textSurface = TTF_RenderText_Blended(mFont, setText.c_str(), 0, textColor);
@@ -100,28 +108,15 @@ bool Texture::LoadFromRenderedText(const std::string& setText, SDL_Color textCol
 	return mTexture != NULL;
 }
 
-void Texture::Free(bool onlyReset)
+void Texture::Free()
 {
 	//Free texture if it exists
 	if(mTexture != NULL)
 	{
-		if(!onlyReset)
-		{
-			mRenderer = NULL;
-		}
 		SDL_DestroyTexture(mTexture);
 		mTexture = NULL;
 		mWidth = 0;
 		mHeight = 0;
-	}
-	if(mFont != NULL)
-	{
-		if(!onlyReset)
-		{
-			TTF_CloseFont(mFont);
-			mFont = NULL;
-			mText.clear();
-		}
 	}
 }
 

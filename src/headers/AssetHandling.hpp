@@ -11,6 +11,7 @@ class Texture
 		Texture(SDL_Renderer* renderer);
 		Texture(SDL_Renderer* renderer, std::string pathToFont, Uint16 fontSize);
 
+		// Complete dealocation
 		~Texture();
 
 		//Loads image at specified path
@@ -19,8 +20,8 @@ class Texture
 		//Creates image from string if passed string is different from current
 		bool LoadFromRenderedText(const std::string& setText, SDL_Color textColor);
 
-		//Deallocates texture
-		void Free(bool onlyReset = false);
+		//Partial dealocation for repeated loading
+		void Free();
 
 		void Render(float x, float y, float scale = 1, SDL_FRect* clip = NULL, double angle = 0.0, SDL_FPoint* center = NULL, SDL_FlipMode flip = SDL_FLIP_NONE);
 		

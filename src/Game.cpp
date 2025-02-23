@@ -1,8 +1,14 @@
 #include "headers/Game.hpp"
 #include <iostream>
+#include "headers/GameSettings.hpp"
+#include "headers/AssetHandling.hpp"
+#include "headers/Timer.hpp"
+#include "headers/Structures.hpp"
+#include "headers/Snake.hpp"
+#include "headers/Apple.hpp"
 
 Game::Game()
-	:mScreenWidth(GRID_WIDTH * GRID_SCALE), mScreenHeight(GRID_HEIGHT * GRID_SCALE), mScore(0)
+	:mScreenWidth(SnakeSetings::gGridWidth * SnakeSetings::gGridScale), mScreenHeight(SnakeSetings::gGridHeight * SnakeSetings::gGridScale), mScore(0)
 {
 	if(!SDL_Init(SDL_INIT_VIDEO))
 	{
@@ -151,6 +157,8 @@ void Game::Run()
 					scoreTxtTex.LoadFromRenderedText(std::to_string(mScore));
 					scoreTxtTex.setColor(0, 0, 0, 32);
 					scoreTxtScale = SDL_min(2, mScreenWidth / scoreTxtTex.getWidth());
+
+					RandomBGColor();
 				}
 
 				moveDelay = 0;
@@ -189,4 +197,9 @@ void Game::Run()
 			break;
 		}
 	}
+}
+
+void Game::RandomBGColor()
+{
+	SDL_SetRenderDrawColor(renderer, 255, 173, 173, 255);
 }

@@ -2,12 +2,6 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
-#include "GameSettings.hpp"
-#include "AssetHandling.hpp"
-#include "Timer.hpp"
-#include "Structures.hpp"
-#include "Snake.hpp"
-#include "Apple.hpp"
 
 class Game
 {
@@ -31,4 +25,6 @@ class Game
             PLAYING,
             DEATH_MENU
         };
+
+        void RandomBGColor();
 };

@@ -1,13 +1,14 @@
 #include "headers/Snake.hpp"
+#include "headers/GameSettings.hpp"
 
 Snake::Snake(SDL_Renderer* renderer, float posX, float posY)
     :mLength(3), mHeadTex(renderer), mBodyTex(renderer)
 {
     mBodyPositions.resize(mLength);
 
-    mBodyPositions[0] = {posX * GRID_SCALE, posY * GRID_SCALE, 90};
-    mBodyPositions[1] = {(posX-1) * GRID_SCALE, posY * GRID_SCALE, 90};
-    mBodyPositions[2] = {(posX-2) * GRID_SCALE, posY * GRID_SCALE, 90};
+    mBodyPositions[0] = {posX * SnakeSetings::gGridScale, posY * SnakeSetings::gGridScale, 90};
+    mBodyPositions[1] = {(posX-1) * SnakeSetings::gGridScale, posY * SnakeSetings::gGridScale, 90};
+    mBodyPositions[2] = {(posX-2) * SnakeSetings::gGridScale, posY * SnakeSetings::gGridScale, 90};
 
     mHeadTex.LoadFromFile("../assets/imgs/snakeHead.png");
     mBodyTex.LoadFromFile("../assets/imgs/snakeBody.png");
@@ -31,8 +32,8 @@ void Snake::Move(Vector2 dir)
     }
 
     // Move head
-    mBodyPositions[0].x += dir.x * GRID_SCALE;
-    mBodyPositions[0].y += dir.y * GRID_SCALE;
+    mBodyPositions[0].x += dir.x * SnakeSetings::gGridScale;
+    mBodyPositions[0].y += dir.y * SnakeSetings::gGridScale;
 
     if(dir.x == 1){ mBodyPositions[0].rotarion = 90; }
     if(dir.x == -1){ mBodyPositions[0].rotarion = -90; }
@@ -68,7 +69,7 @@ void Snake::Render()
             snakePartTex->setColor(currentR, currentG, currentB);
         }
 
-        snakePartTex->Render(mBodyPositions[i].x, mBodyPositions[i].y, GRID_SCALE / snakePartTex->getWidth(), NULL, mBodyPositions[i].rotarion, NULL);
+        snakePartTex->Render(mBodyPositions[i].x, mBodyPositions[i].y, SnakeSetings::gGridScale / snakePartTex->getWidth(), NULL, mBodyPositions[i].rotarion, NULL);
     }
 }
 
@@ -83,11 +84,11 @@ bool Snake::CheckCollision()
     {
         return true;
     }
-    if(mBodyPositions[0].x >= GRID_WIDTH * GRID_SCALE)
+    if(mBodyPositions[0].x >= SnakeSetings::gGridWidth * SnakeSetings::gGridScale)
     {
         return true;
     }
-    if(mBodyPositions[0].y >= GRID_HEIGHT * GRID_SCALE)
+    if(mBodyPositions[0].y >= SnakeSetings::gGridHeight * SnakeSetings::gGridScale)
     {
         return true;
     }
@@ -119,9 +120,9 @@ void Snake::Reset(float posX, float posY)
     mLength = 3;
     mBodyPositions.resize(mLength);
 
-    mBodyPositions[0] = {posX * GRID_SCALE, posY * GRID_SCALE, 90};
-    mBodyPositions[1] = {(posX-1) * GRID_SCALE, posY * GRID_SCALE, 90};
-    mBodyPositions[2] = {(posX-2) * GRID_SCALE, posY * GRID_SCALE, 90};
+    mBodyPositions[0] = {posX * SnakeSetings::gGridScale, posY * SnakeSetings::gGridScale, 90};
+    mBodyPositions[1] = {(posX-1) * SnakeSetings::gGridScale, posY * SnakeSetings::gGridScale, 90};
+    mBodyPositions[2] = {(posX-2) * SnakeSetings::gGridScale, posY * SnakeSetings::gGridScale, 90};
 }
 
 std::vector<Vector2Rot> Snake::getPositions()

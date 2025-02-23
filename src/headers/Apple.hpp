@@ -1,7 +1,6 @@
 #pragma once
 #include <SDL3/SDL.h>
 #include <vector>
-#include "GameSettings.hpp"
 #include "Structures.hpp"
 #include "AssetHandling.hpp"
 

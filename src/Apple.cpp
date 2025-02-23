@@ -1,7 +1,8 @@
 #include "headers/Apple.hpp"
+#include "headers/GameSettings.hpp"
 
 Apple::Apple(SDL_Renderer *renderer)
-    :mPosition({5 * GRID_SCALE, 3 * GRID_SCALE}), mTex(renderer)
+    :mPosition({5 * SnakeSetings::gGridScale, 3 * SnakeSetings::gGridScale}), mTex(renderer)
 {
     mTex.LoadFromFile("../assets/imgs/apple.png");
  
@@ -25,7 +26,7 @@ void Apple::Respawn(const std::vector<Vector2Rot>& snakePositions)
     do
     {
         isFreePos = true;
-        respawnPos = {(float)(SDL_rand(GRID_WIDTH) * GRID_SCALE), (float)(SDL_rand(GRID_HEIGHT) * GRID_SCALE)};
+        respawnPos = {(float)(SDL_rand(SnakeSetings::gGridWidth) * SnakeSetings::gGridScale), (float)(SDL_rand(SnakeSetings::gGridWidth) * SnakeSetings::gGridScale)};
     
         // check if respawnPos is set on snake
         for (Vector2Rot snakePos : snakePositions)
@@ -44,7 +45,7 @@ void Apple::Respawn(const std::vector<Vector2Rot>& snakePositions)
 
 void Apple::Render()
 {
-    mTex.Render(mPosition.x, mPosition.y, GRID_SCALE / mTex.getWidth());
+    mTex.Render(mPosition.x, mPosition.y, SnakeSetings::gGridScale / mTex.getWidth());
 }
 
 Vector2 Apple::getPosition()

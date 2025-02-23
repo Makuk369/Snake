@@ -14,11 +14,12 @@ class Texture
 		// Complete dealocation
 		~Texture();
 
-		//Loads image at specified path
+		// Loads image at specified path
 		bool LoadFromFile(std::string path);
 		
-		//Creates image from string if passed string is different from current
-		bool LoadFromRenderedText(const std::string& setText, SDL_Color textColor);
+		// Creates image from string if passed string is different from current
+		// Default color = white
+		bool LoadFromRenderedText(const std::string& setText, SDL_Color textColor = {255, 255, 255, 255});
 
 		//Partial dealocation for repeated loading
 		void Free();

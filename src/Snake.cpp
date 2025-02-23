@@ -52,7 +52,7 @@ void Snake::Render()
 {
     Texture* snakePartTex = &mHeadTex;
 
-    Uint8 colorDarken = 50 / mLength;
+    Uint8 colorDarken = 65 / mLength;
     Uint8 currentR = 125;
     Uint8 currentG = 180;
     Uint8 currentB = 65;

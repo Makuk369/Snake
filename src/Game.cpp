@@ -201,5 +201,8 @@ void Game::Run()
 
 void Game::RandomBGColor()
 {
-	SDL_SetRenderDrawColor(renderer, 255, 173, 173, 255);
+	using namespace SnakeSetings;
+
+	int rngI = SDL_rand(gBGColors.size());
+	SDL_SetRenderDrawColor(renderer, gBGColors[rngI].r,  gBGColors[rngI].g,  gBGColors[rngI].b, 255);
 }

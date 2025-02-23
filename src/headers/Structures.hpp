@@ -17,4 +17,3 @@ struct Vector2Rot
 
     Vector2Rot(float x = 0, float y = 0, float rotation = 0);
 };
-

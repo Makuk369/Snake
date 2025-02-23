@@ -53,6 +53,8 @@ void Snake::Render()
     Texture* snakePartTex = &mHeadTex;
 
     Uint8 colorDarken = 65 / mLength;
+    if(colorDarken == 0) { colorDarken = 1; }
+
     Uint8 currentR = 125;
     Uint8 currentG = 180;
     Uint8 currentB = 65;
@@ -63,9 +65,18 @@ void Snake::Render()
         {
             snakePartTex = &mBodyTex;
 
-            currentR -= colorDarken;
-            currentG -= colorDarken;
-            currentB -= colorDarken;
+            if(i > 65) // gets darker until length = 65, then it gets lighter
+            {
+                currentR += colorDarken;
+                currentG += colorDarken;
+                currentB += colorDarken;
+            } 
+            else
+            {
+                currentR -= colorDarken;
+                currentG -= colorDarken;
+                currentB -= colorDarken;
+            }
             snakePartTex->setColor(currentR, currentG, currentB);
         }
 

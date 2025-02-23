@@ -80,6 +80,15 @@ void Game::Run()
 				// start the game
 				if(event.key.key == SDLK_SPACE)
 				{
+					// Reset
+					if(currentState == DEATH_MENU) 
+					{
+						snake.Reset(5, 5);
+						apple.Respawn(snake.getPositions());
+						scoreTxtTex.setColor(0, 0, 0, 32);
+						scoreTxtScale = SDL_min(2, mScreenWidth / scoreTxtTex.getWidth());
+						mScore = 0;
+					}
 					currentState = PLAYING;
 				}
 				// snake movement

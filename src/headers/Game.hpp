@@ -15,12 +15,12 @@ class Game
         Game();
         ~Game();
         
+        void Run();
+        
+    private:
         SDL_Window* window;
         SDL_Renderer* renderer;
         
-        void Run();
-    
-    private:
         int mScreenWidth;
         int mScreenHeight;
         int mScore;

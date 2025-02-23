@@ -114,6 +114,16 @@ bool Snake::CheckCollisionWith(Vector2 otherPos)
     return false;
 }
 
+void Snake::Reset(float posX, float posY)
+{
+    mLength = 3;
+    mBodyPositions.resize(mLength);
+
+    mBodyPositions[0] = {posX * GRID_SCALE, posY * GRID_SCALE, 90};
+    mBodyPositions[1] = {(posX-1) * GRID_SCALE, posY * GRID_SCALE, 90};
+    mBodyPositions[2] = {(posX-2) * GRID_SCALE, posY * GRID_SCALE, 90};
+}
+
 std::vector<Vector2Rot> Snake::getPositions()
 {
     return mBodyPositions;

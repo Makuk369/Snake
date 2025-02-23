@@ -16,6 +16,7 @@ class Snake
         void Render();
         bool CheckCollision();
         bool CheckCollisionWith(Vector2 otherPos);
+        void Reset(float posX, float posY);
 
         std::vector<Vector2Rot> getPositions();
 

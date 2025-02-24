@@ -4,9 +4,15 @@
 
 namespace SnakeSetings
 {
+    // Default = 10, 10, 80
     const uint16_t gGridWidth = 10;
     const uint16_t gGridHeight = 10;
     const uint16_t gGridScale = 80;
+
+    // Default = 2, 1, 10
+    const uint8_t gGrowSize = 2;
+    const float gMoveSpeedMultiplier = 1.0f;
+    const uint16_t gScoreIncrease = 10;
 
     // First is white
     const std::array<SDL_Color, 9> gBGColors {{

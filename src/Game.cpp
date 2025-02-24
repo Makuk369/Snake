@@ -71,7 +71,7 @@ void Game::Run()
 	Texture scoreTxtTex(renderer, "../assets/fonts/Roboto-Bold.ttf", 64);
 	scoreTxtTex.LoadFromRenderedText("SCORE:", {0, 0, 0});
 	
-	Snake snake(renderer, 5, 5);
+	Snake snake(renderer, (Uint16)(SnakeSetings::gGridWidth / 2), (Uint16)(SnakeSetings::gGridHeight / 2));
 	Vector2 snakeMoveDir = {1, 0};
 	float moveDelay = 0;
 
@@ -94,7 +94,7 @@ void Game::Run()
 					// Reset
 					if(currentState == DEATH_MENU) 
 					{
-						snake.Reset(5, 5);
+						snake.Reset((Uint16)(SnakeSetings::gGridWidth / 2), (Uint16)(SnakeSetings::gGridHeight / 2));
 						snakeMoveDir = {1, 0};
 						apple.Respawn(snake.getPositions());
 						mScore = 0;
@@ -146,7 +146,7 @@ void Game::Run()
 
 		case PLAYING: // ------------------------------------------------------------------
 			moveDelay += deltaTime;
-			if(moveDelay >= 0.5)
+			if(moveDelay >= (0.5 / SnakeSetings::gMoveSpeedMultiplier))
 			{
 				snake.Move(snakeMoveDir);
 
@@ -162,9 +162,9 @@ void Game::Run()
 				if(snake.CheckCollisionWith(apple.getPosition()))
 				{
 					apple.Respawn(snake.getPositions());
-					snake.Grow(2);
+					snake.Grow(SnakeSetings::gGrowSize);
 
-					mScore += 10;
+					mScore += SnakeSetings::gScoreIncrease;
 					scoreNumTxtTex.LoadFromRenderedText(std::to_string(mScore));
 					scoreNumTxtTex.setColor(0, 0, 0, 32);
 					scoreNumTxtScale = SDL_min(2, mScreenWidth / scoreNumTxtTex.getWidth());

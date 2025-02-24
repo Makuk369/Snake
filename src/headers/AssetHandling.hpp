@@ -9,13 +9,13 @@ class Texture
 {
 	public:
 		Texture(SDL_Renderer* renderer);
-		Texture(SDL_Renderer* renderer, std::string pathToFont, Uint16 fontSize);
+		Texture(SDL_Renderer* renderer, const std::string& pathToFont, Uint16 fontSize);
 
 		// Complete dealocation
 		~Texture();
 
 		// Loads image at specified path
-		bool LoadFromFile(std::string path);
+		bool LoadFromFile(const std::string& path);
 		
 		// Creates image from string if passed string is different from current
 		// Default color = white

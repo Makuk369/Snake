@@ -1,5 +1,4 @@
 #include "headers/Game.hpp"
-#include <iostream>
 #include "headers/GameSettings.hpp"
 #include "headers/AssetHandling.hpp"
 #include "headers/Timer.hpp"
@@ -35,9 +34,9 @@ Game::Game()
 Game::~Game()
 {
 	SDL_DestroyRenderer(renderer);
-	renderer = NULL;
+	renderer = nullptr;
 	SDL_DestroyWindow(window);
-	window = NULL;
+	window = nullptr;
 
 	//Quit SDL subsystems
 	SDL_Quit();
@@ -61,10 +60,16 @@ void Game::Run()
 	Texture mainMenuTxtTex(renderer, "../assets/fonts/Roboto-Bold.ttf", 64);
 	mainMenuTxtTex.LoadFromRenderedText("Press SPACE to START", {0, 0, 0});
 
-	Texture scoreTxtTex(renderer, "../assets/fonts/Roboto-Bold.ttf", 256);
-	scoreTxtTex.LoadFromRenderedText(std::to_string(mScore), {0, 0, 0});
-	scoreTxtTex.setColor(0, 0, 0, 32);
-	float scoreTxtScale = SDL_min(2, mScreenWidth / scoreTxtTex.getWidth());
+	Texture scoreNumTxtTex(renderer, "../assets/fonts/Roboto-Bold.ttf", 256);
+	scoreNumTxtTex.LoadFromRenderedText(std::to_string(mScore), {0, 0, 0});
+	scoreNumTxtTex.setColor(0, 0, 0, 32);
+	float scoreNumTxtScale = SDL_min(2, mScreenWidth / scoreNumTxtTex.getWidth());
+
+	Texture diedTxtTex(renderer, "../assets/fonts/Roboto-Bold.ttf", 64);
+	diedTxtTex.LoadFromRenderedText("Snake Died!", {255, 0, 0});
+
+	Texture scoreTxtTex(renderer, "../assets/fonts/Roboto-Bold.ttf", 64);
+	scoreTxtTex.LoadFromRenderedText("SCORE:", {0, 0, 0});
 	
 	Snake snake(renderer, 5, 5);
 	Vector2 snakeMoveDir = {1, 0};
@@ -90,12 +95,18 @@ void Game::Run()
 					if(currentState == DEATH_MENU) 
 					{
 						snake.Reset(5, 5);
+						snakeMoveDir = {1, 0};
 						apple.Respawn(snake.getPositions());
-						scoreTxtTex.setColor(0, 0, 0, 32);
-						scoreTxtScale = SDL_min(2, mScreenWidth / scoreTxtTex.getWidth());
 						mScore = 0;
+						scoreNumTxtTex.LoadFromRenderedText(std::to_string(mScore));
+						scoreNumTxtTex.setColor(0, 0, 0, 32);
+						scoreNumTxtScale = SDL_min(2, mScreenWidth / scoreNumTxtTex.getWidth());
 					}
 					currentState = PLAYING;
+				}
+				if(event.key.key == SDLK_ESCAPE)
+				{
+					isRunning = false;
 				}
 				// snake movement
 				if(event.key.key == SDLK_W)
@@ -154,9 +165,9 @@ void Game::Run()
 					snake.Grow(2);
 
 					mScore += 10;
-					scoreTxtTex.LoadFromRenderedText(std::to_string(mScore));
-					scoreTxtTex.setColor(0, 0, 0, 32);
-					scoreTxtScale = SDL_min(2, mScreenWidth / scoreTxtTex.getWidth());
+					scoreNumTxtTex.LoadFromRenderedText(std::to_string(mScore));
+					scoreNumTxtTex.setColor(0, 0, 0, 32);
+					scoreNumTxtScale = SDL_min(2, mScreenWidth / scoreNumTxtTex.getWidth());
 
 					RandomBGColor();
 				}
@@ -168,7 +179,7 @@ void Game::Run()
 			//Clear screen
 			SDL_RenderClear(renderer);
 			
-			scoreTxtTex.Render((mScreenWidth - scoreTxtTex.getWidth() * scoreTxtScale) / 2, (mScreenHeight - scoreTxtTex.getHeight() * scoreTxtScale) / 2, scoreTxtScale);
+			scoreNumTxtTex.Render((mScreenWidth - scoreNumTxtTex.getWidth() * scoreNumTxtScale) / 2, (mScreenHeight - scoreNumTxtTex.getHeight() * scoreNumTxtScale) / 2, scoreNumTxtScale);
 			apple.Render();
 			snake.Render();
 
@@ -180,14 +191,15 @@ void Game::Run()
 			// Clear screen
 			SDL_RenderClear(renderer);
 
-			mainMenuTxtTex.LoadFromRenderedText("Snake Died!", {255, 0, 0});
-			mainMenuTxtTex.Render((mScreenWidth - mainMenuTxtTex.getWidth()) / 2, (mScreenHeight - mainMenuTxtTex.getHeight()) / 6);
+			diedTxtTex.Render((mScreenWidth - diedTxtTex.getWidth()) / 2, (mScreenHeight - diedTxtTex.getHeight()) / 6);
 
-			mainMenuTxtTex.LoadFromRenderedText("SCORE:", {0, 0, 0});
-			mainMenuTxtTex.Render((mScreenWidth - mainMenuTxtTex.getWidth()) / 2, (mScreenHeight - mainMenuTxtTex.getHeight()) / 3.5);
+			scoreTxtTex.Render((mScreenWidth - scoreTxtTex.getWidth()) / 2, (mScreenHeight - scoreTxtTex.getHeight()) / 3.5);
 
-			scoreTxtTex.setColor(0, 0, 0, 255);
-			scoreTxtTex.Render((mScreenWidth - scoreTxtTex.getWidth() * scoreTxtScale / 2) / 2, (mScreenHeight - scoreTxtTex.getHeight() * scoreTxtScale / 2) / 2, scoreTxtScale / 2);
+			scoreNumTxtTex.setColor(0, 0, 0, 255);
+			scoreNumTxtTex.Render((mScreenWidth - scoreNumTxtTex.getWidth() * scoreNumTxtScale / 2) / 2, (mScreenHeight - scoreNumTxtTex.getHeight() * scoreNumTxtScale / 2) / 2, scoreNumTxtScale / 2);
+
+			mainMenuTxtTex.setColor(0, 0, 0, 128);
+			mainMenuTxtTex.Render((mScreenWidth - mainMenuTxtTex.getWidth()) / 2, (mScreenHeight - mainMenuTxtTex.getHeight()));
 
 			//Update screen
 			SDL_RenderPresent(renderer);

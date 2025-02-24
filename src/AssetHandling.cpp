@@ -1,15 +1,14 @@
 #include "headers/AssetHandling.hpp"
-#include <iostream>
 
 Texture::Texture(SDL_Renderer* renderer)
-	: mTexture(NULL), mRenderer(renderer), mWidth(0), mHeight(0), mFont(NULL), mText("")
+	: mTexture(nullptr), mRenderer(renderer), mWidth(0), mHeight(0), mFont(nullptr), mText("")
 {}
 
-Texture::Texture(SDL_Renderer* renderer, std::string pathToFont, Uint16 fontSize)
-	: mTexture(NULL), mRenderer(renderer), mWidth(0), mHeight(0), mFont(NULL), mText("")
+Texture::Texture(SDL_Renderer* renderer, const std::string& pathToFont, Uint16 fontSize)
+	: mTexture(nullptr), mRenderer(renderer), mWidth(0), mHeight(0), mFont(nullptr), mText("")
 {
 	mFont = TTF_OpenFont(pathToFont.c_str(), fontSize);
-	if(mFont == NULL)
+	if(mFont == nullptr)
 	{
 		SDL_Log("Failed to load font! SDL_ttf Error: %s\n", SDL_GetError());
 	}
@@ -19,23 +18,23 @@ Texture::~Texture()
 {
 	Free();
 
-	mRenderer = NULL;
+	mRenderer = nullptr;
 
-	if(mFont != NULL)
+	if(mFont != nullptr)
 	{
 		TTF_CloseFont(mFont);
-		mFont = NULL;
+		mFont = nullptr;
 		mText.clear();
 	}
 }
 
-bool Texture::LoadFromFile(std::string path)
+bool Texture::LoadFromFile(const std::string& path)
 {
 	Free();
 
 	//Load image at specified path
 	SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
-	if( loadedSurface == NULL )
+	if( loadedSurface == nullptr )
 	{
 		SDL_Log( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), SDL_GetError() );
 	}
@@ -43,7 +42,7 @@ bool Texture::LoadFromFile(std::string path)
 	{
 		//Create texture from surface pixels
 		mTexture = SDL_CreateTextureFromSurface(mRenderer, loadedSurface);
-		if( mTexture == NULL )
+		if( mTexture == nullptr )
 		{
 			SDL_Log( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
 		}
@@ -61,14 +60,14 @@ bool Texture::LoadFromFile(std::string path)
 	}
 
 	//Return success
-	return mTexture != NULL;
+	return mTexture != nullptr;
 }
 
 bool Texture::LoadFromRenderedText(const std::string& setText, SDL_Color textColor)
 {
 	if(mText.compare(setText) == 0)
 	{
-		// SDL_Log("Trying to load a text texture with the same text: %s == %s", mText, setText);
+		SDL_Log("Trying to load a text texture with the same text: %s == %s", mText.c_str(), setText.c_str());
 		return true;
 	}
 	else
@@ -81,7 +80,7 @@ bool Texture::LoadFromRenderedText(const std::string& setText, SDL_Color textCol
 
 	//Render text surface
 	SDL_Surface* textSurface = TTF_RenderText_Blended(mFont, mText.c_str(), 0, textColor);
-	if(textSurface == NULL)
+	if(textSurface == nullptr)
 	{
 		SDL_Log("Unable to render text surface! SDL_ttf Error: %s\n", SDL_GetError());
 	}
@@ -89,7 +88,7 @@ bool Texture::LoadFromRenderedText(const std::string& setText, SDL_Color textCol
 	{
 		//Create texture from surface pixels
 		mTexture = SDL_CreateTextureFromSurface(mRenderer, textSurface);
-		if(mTexture == NULL)
+		if(mTexture == nullptr)
 		{
 			SDL_Log("Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError());
 		}
@@ -105,16 +104,16 @@ bool Texture::LoadFromRenderedText(const std::string& setText, SDL_Color textCol
 	}
 	
 	//Return success
-	return mTexture != NULL;
+	return mTexture != nullptr;
 }
 
 void Texture::Free()
 {
 	//Free texture if it exists
-	if(mTexture != NULL)
+	if(mTexture != nullptr)
 	{
 		SDL_DestroyTexture(mTexture);
-		mTexture = NULL;
+		mTexture = nullptr;
 		mWidth = 0;
 		mHeight = 0;
 	}
@@ -138,7 +137,7 @@ void Texture::Render(float x, float y, float scale, SDL_FRect* clip, double angl
 	SDL_FRect renderQuad = {x, y, mWidth * scale, mHeight * scale};
 
 	//Set clip rendering dimensions
-	if(clip != NULL)
+	if(clip != nullptr)
 	{
 		renderQuad.w = clip->w * scale;
 		renderQuad.h = clip->h * scale;
